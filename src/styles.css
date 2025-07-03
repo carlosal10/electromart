@@ -1,0 +1,162 @@
+:root {
+    /* Palette based on your image */
+    --college-blue: #0F214D;
+    --persian-blue: #0B5FB0;
+    --picton-blue: #2BA3EC;
+    --middle-blue: #AAFIFF;
+    --morning-blue: #EBFCFF;
+    --yellow-banana: #EFEDCE;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--morning-blue);
+    min-height: 100vh;
+  }
+  
+  /* Navbar */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: var(--college-blue);
+  }
+  
+  .navbar .logo {
+    font-weight: bold;
+    font-size: 1.6rem;
+    color: var(--morning-blue);
+  }
+  
+  .navbar nav a {
+    color: var(--middle-blue);
+    margin-left: 2rem;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .navbar nav a:hover {
+    color: red;
+  }
+  
+  /* Hero */
+  .hero {
+    background: linear-gradient(to bottom, var(--morning-blue), var(--yellow-banana));
+    text-align: center;
+    padding: 6rem 2rem;
+    color: var(--morning-blue);
+  }
+  
+  .hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: #0F214D;
+  }
+  
+  .hero p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    color: var(--persian-blue);
+  }
+  .hero a {
+    color: #EBFCFF;
+  }
+  
+  .hero .cta-btn {
+    background:#AF0000;
+    color: var(--college-blue);
+    padding: 0.8rem 2rem;
+    border: none;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .hero .cta-btn:hover {
+    background: var(--morning-blue);
+  }
+  
+  /* Category Section */
+  .categories {
+    background: var(--morning-blue);
+    color: var(--college-blue);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+  
+  .categories h2 {
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .category-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  
+  .category-card {
+    background: var(--yellow-banana);
+    padding: 1.5rem;
+    border-radius: 10px;
+    width: 180px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-weight: 500;
+    transition: transform 0.3s ease;
+  }
+  
+  .category-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Products */
+  .products {
+    background: linear-gradient(to bottom, var(--yellow-banana), var(--morning-blue));
+    padding: 3rem 2rem;
+    color: var(--college-blue);
+    text-align: center;
+  }
+  
+  .products h2 {
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .product-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  
+  .product-card {
+    background: var(--morning-blue);
+    padding: 1rem;
+    border-radius: 10px;
+    width: 200px;
+    color: var(--college-blue);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+  }
+  
+  .product-card:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Footer */
+  .footer {
+    background: var(--college-blue);
+    color: var(--middle-blue);
+    text-align: center;
+    padding: 1rem;
+  }
+  
