@@ -7,6 +7,9 @@ import AddProduct from './pages/AddProduct';
 import Shop from './pages/Shop';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
+import { Routes, Route } from 'react-router-dom';
+import AdminProductList from './pages/AdminProductList';
+
 
 const App = () => (
   <Router>
@@ -17,6 +20,7 @@ const App = () => (
       <Route path="/shop" element={<Shop />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/admin/products" element={<AdminProductList />} />
     </Routes>
     <Footer />
   </Router>
