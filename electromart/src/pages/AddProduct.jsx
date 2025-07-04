@@ -128,7 +128,7 @@ const AddProduct = () => {
 
   return (
 <section className="form-section">
-    <h3 style={{ marginTop: '40px' }}>Add Category</h3>
+    <h3 style={{ marginTop: '10px' }}>Add Category</h3>
       <form className="product-form" onSubmit={handleCategorySubmit}>
         <div className="form-group">
           <label>Category Name</label>

@@ -6,6 +6,9 @@
   h2{
     color: black;
   }
+  h3{
+    color: black;
+  }
   .product-form {
     display: flex;
     flex-direction: column;
