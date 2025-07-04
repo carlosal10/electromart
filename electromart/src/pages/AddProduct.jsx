@@ -66,43 +66,41 @@ const AddProduct = () => {
     }
   };
 
-  const handleProductChange = (e) => {
-    const { name, value } = e.target;
-    setProductForm((prev) => ({ ...prev, [name]: value }));
+const handleProductSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!selectedCategory) {
+    toast.error('Please select a category');
+    return;
+  }
+
+  const { photo, ...rest } = productForm;
+  const payload = {
+    ...rest,
+    category: selectedCategory,
+    photoUrl: photo  // ✅ renamed properly
   };
 
-  const handleProductSubmit = async (e) => {
-    e.preventDefault();
+  setLoading(true);
+  try {
+    const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
 
-    if (!selectedCategory) {
-      toast.error('Please select a category');
-      return;
-    }
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Unknown error');
 
-    const payload = {
-      ...productForm,
-      category: selectedCategory,
-    };
+    toast.success('Product added!');
+    setTimeout(() => navigate('/admin/products'), 2000);
+  } catch (error) {
+    toast.error('Error: ' + error.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
-    setLoading(true);
-    try {
-      const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/products', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || 'Unknown error');
-
-      toast.success('Product added!');
-      setTimeout(() => navigate('/admin/products'), 2000);
-    } catch (error) {
-      toast.error('Error: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleCategorySubmit = async (e) => {
     e.preventDefault();
