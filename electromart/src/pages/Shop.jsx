@@ -1,25 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import './shop.css'; // Optional: import shop-specific styles if needed
+import './shop.css';
 
 const Shop = () => {
   const API_URL = 'https://ecommerce-electronics-0j4e.onrender.com/api/products';
 
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState('');
-  const [brand, setBrand] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [maxPrice, setMaxPrice] = useState(1000);
+  const [maxPriceLimit, setMaxPriceLimit] = useState(1000);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Fetch products on mount
   useEffect(() => {
     async function fetchProducts() {
       try {
         const res = await fetch(API_URL);
         if (!res.ok) throw new Error('Failed to fetch products.');
+
         const data = await res.json();
         setProducts(data);
         setFilteredProducts(data);
+
+        // Extract unique categories
+        const uniqueCategories = [...new Set(data.map(prod => prod.category).filter(Boolean))];
+        setCategories(uniqueCategories);
+
+        // Determine highest price
+        const highest = Math.max(...data.map(prod => prod.price));
+        setMaxPrice(highest);
+        setMaxPriceLimit(highest);
       } catch (err) {
         setError('Error loading products. Please try again later.');
         console.error(err);
@@ -31,17 +44,16 @@ const Shop = () => {
     fetchProducts();
   }, []);
 
+  // Apply filters when category, searchTerm, or maxPrice changes
   useEffect(() => {
-    const filtered = products.filter((product) => {
-      return (
-        (category === '' || product.category === category) &&
-        (brand === '' || product.brand === brand) &&
-        (isNaN(maxPrice) || product.price <= maxPrice)
-      );
-    });
+    const filtered = products.filter(product =>
+      (category === '' || product.category === category) &&
+      (searchTerm === '' || product.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      (!isNaN(maxPrice) && product.price <= maxPrice)
+    );
 
     setFilteredProducts(filtered);
-  }, [category, brand, maxPrice, products]);
+  }, [category, searchTerm, maxPrice, products]);
 
   return (
     <main className="shop-container">
@@ -56,35 +68,34 @@ const Shop = () => {
             onChange={(e) => setCategory(e.target.value)}
           >
             <option value="">All</option>
-            <option value="Phones">Phones</option>
-            <option value="Laptops">Laptops</option>
-            <option value="Accessories">Accessories</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
           </select>
         </div>
 
         <div className="filter-group">
-          <label htmlFor="brandFilter">Brand</label>
-          <select
-            id="brandFilter"
-            value={brand}
-            onChange={(e) => setBrand(e.target.value)}
-          >
-            <option value="">All</option>
-            <option value="Samsung">Samsung</option>
-            <option value="Apple">Apple</option>
-            <option value="Dell">Dell</option>
-          </select>
+          <label htmlFor="searchFilter">Search Name</label>
+          <input
+            type="text"
+            id="searchFilter"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="e.g. Samsung S22"
+          />
         </div>
 
         <div className="filter-group">
           <label htmlFor="priceFilter">
-            Max Price: <span>{maxPrice}</span>
+            Max Price: <strong>Ksh {maxPrice.toLocaleString()}</strong>
           </label>
           <input
             type="range"
             id="priceFilter"
             min="0"
-            max="1000"
+            max={maxPriceLimit}
             value={maxPrice}
             onChange={(e) => setMaxPrice(parseFloat(e.target.value))}
           />
@@ -111,7 +122,7 @@ const Shop = () => {
                   />
                 </div>
                 <h3>{product.name}</h3>
-                <p>Ksh {product.price}</p>
+                <p>Ksh {product.price.toLocaleString()}</p>
                 <button className="btn-red">Add to Cart</button>
               </div>
             ))

@@ -7,7 +7,6 @@ import './add-product.css'; // Your CSS
 const AddProduct = () => {
   const navigate = useNavigate();
 
-  // States
   const [photoPreview, setPhotoPreview] = useState(null);
   const [productForm, setProductForm] = useState({
     name: '',
@@ -15,14 +14,15 @@ const AddProduct = () => {
     stock: '',
     features: '',
     description: '',
-    photo: null
+    photo: '' // Now holds Cloudinary URL
   });
+
   const [selectedCategory, setSelectedCategory] = useState('');
   const [categories, setCategories] = useState([]);
   const [categoryName, setCategoryName] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Fetch categories on mount
+  // Fetch categories
   useEffect(() => {
     async function fetchCategories() {
       try {
@@ -37,14 +37,32 @@ const AddProduct = () => {
     fetchCategories();
   }, []);
 
-  // Image preview handler
-  const handlePhotoChange = (e) => {
+  // Upload image to Cloudinary
+  const handlePhotoChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setProductForm((prev) => ({ ...prev, photo: file }));
-      const reader = new FileReader();
-      reader.onload = (event) => setPhotoPreview(event.target.result);
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'ecom_public_upload'); // Replace with your preset
+
+    try {
+      const res = await fetch('https://api.cloudinary.com/v1_1/dderoi7rp/image/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.secure_url) {
+        setProductForm((prev) => ({ ...prev, photo: data.secure_url }));
+        setPhotoPreview(data.secure_url);
+        toast.success('Image uploaded!');
+      } else {
+        throw new Error('Upload failed');
+      }
+    } catch (err) {
+      toast.error('Image upload failed');
+      console.error(err);
     }
   };
 
@@ -53,7 +71,6 @@ const AddProduct = () => {
     setProductForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Product form submit
   const handleProductSubmit = async (e) => {
     e.preventDefault();
 
@@ -62,21 +79,21 @@ const AddProduct = () => {
       return;
     }
 
-    const formData = new FormData();
-    Object.entries(productForm).forEach(([key, val]) => formData.append(key, val));
-    formData.append('category', selectedCategory);
+    const payload = {
+      ...productForm,
+      category: selectedCategory,
+    };
 
     setLoading(true);
     try {
       const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/products', {
         method: 'POST',
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
 
-      const contentType = res.headers.get('content-type');
-      const result = contentType?.includes('application/json') ? await res.json() : await res.text();
-
-      if (!res.ok) throw new Error(result.error || result || 'Unknown error');
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || 'Unknown error');
 
       toast.success('Product added!');
       setTimeout(() => navigate('/admin/products'), 2000);
@@ -87,7 +104,6 @@ const AddProduct = () => {
     }
   };
 
-  // Category form submit
   const handleCategorySubmit = async (e) => {
     e.preventDefault();
     const name = categoryName.trim();
@@ -104,14 +120,30 @@ const AddProduct = () => {
       if (!res.ok) throw new Error(result.error || 'Unknown error');
       toast.success('Category added!');
       setCategoryName('');
-      setCategories((prev) => [...prev, { name, _id: Date.now().toString() }]); // Optimistic update
+      setCategories((prev) => [...prev, { name, _id: Date.now().toString() }]);
     } catch (err) {
       toast.error('Failed to add category: ' + err.message);
     }
   };
 
   return (
-    <section className="form-section">
+<section className="form-section">
+    <h3 style={{ marginTop: '40px' }}>Add Category</h3>
+      <form className="product-form" onSubmit={handleCategorySubmit}>
+        <div className="form-group">
+          <label>Category Name</label>
+          <input
+            type="text"
+            name="category"
+            placeholder="e.g., Smartphones"
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" className="btn-red">Add Category</button>
+      </form>
+    
       <ToastContainer />
       <h2>Add New Product</h2>
 
@@ -155,7 +187,12 @@ const AddProduct = () => {
           <label>Upload Product Photo</label>
           <input type="file" accept="image/*" onChange={handlePhotoChange} required />
           {photoPreview && (
-            <img src={photoPreview} alt="Preview" className="preview" style={{ marginTop: '10px', maxWidth: '200px', borderRadius: '8px' }} />
+            <img
+              src={photoPreview}
+              alt="Preview"
+              className="preview"
+              style={{ marginTop: '10px', maxWidth: '200px', borderRadius: '8px' }}
+            />
           )}
         </div>
 
@@ -164,21 +201,7 @@ const AddProduct = () => {
         </button>
       </form>
 
-      <h3 style={{ marginTop: '40px' }}>Add Category</h3>
-      <form className="product-form" onSubmit={handleCategorySubmit}>
-        <div className="form-group">
-          <label>Category Name</label>
-          <input
-            type="text"
-            name="category"
-            placeholder="e.g., Smartphones"
-            value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" className="btn-red">Add Category</button>
-      </form>
+      
     </section>
   );
 };
