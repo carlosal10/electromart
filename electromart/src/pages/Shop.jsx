@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useCart } from '../context/CartContext';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './shop.css';
 
 const Shop = () => {
   const API_URL = 'https://ecommerce-electronics-0j4e.onrender.com/api/products';
+  const { addToCart } = useCart();
 
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -14,7 +18,6 @@ const Shop = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Fetch products on mount
   useEffect(() => {
     async function fetchProducts() {
       try {
@@ -25,11 +28,9 @@ const Shop = () => {
         setProducts(data);
         setFilteredProducts(data);
 
-        // Extract unique categories
         const uniqueCategories = [...new Set(data.map(prod => prod.category).filter(Boolean))];
         setCategories(uniqueCategories);
 
-        // Determine highest price
         const highest = Math.max(...data.map(prod => prod.price));
         setMaxPrice(highest);
         setMaxPriceLimit(highest);
@@ -44,7 +45,6 @@ const Shop = () => {
     fetchProducts();
   }, []);
 
-  // Apply filters when category, searchTerm, or maxPrice changes
   useEffect(() => {
     const filtered = products.filter(product =>
       (category === '' || product.category === category) &&
@@ -55,8 +55,14 @@ const Shop = () => {
     setFilteredProducts(filtered);
   }, [category, searchTerm, maxPrice, products]);
 
+  const handleAddToCart = (product) => {
+    addToCart(product);
+    toast.success(`✅ "${product.name}" added to cart`);
+  };
+
   return (
     <main className="shop-container">
+      <ToastContainer position="top-center" />
       <aside className="filters">
         <h3>Filters</h3>
 
@@ -69,9 +75,7 @@ const Shop = () => {
           >
             <option value="">All</option>
             {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
+              <option key={cat} value={cat}>{cat}</option>
             ))}
           </select>
         </div>
@@ -123,7 +127,9 @@ const Shop = () => {
                 </div>
                 <h3>{product.name}</h3>
                 <p>Ksh {product.price.toLocaleString()}</p>
-                <button className="btn-red">Add to Cart</button>
+                <button className="btn-red" onClick={() => handleAddToCart(product)}>
+                  Add to Cart
+                </button>
               </div>
             ))
           )}
