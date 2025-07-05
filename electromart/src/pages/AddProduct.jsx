@@ -65,6 +65,13 @@ const AddProduct = () => {
       console.error(err);
     }
   };
+const handleProductChange = (e) => {
+  const { name, value } = e.target;
+  setProductForm((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
 
 const handleProductSubmit = async (e) => {
   e.preventDefault();
