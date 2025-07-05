@@ -15,11 +15,13 @@ const Login = () => {
     try {
       const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/auth/login', {
         method: 'POST',
-        headers: {'Content-Type':'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Login failed');
+
       localStorage.setItem('token', data.token);
       toast.success('Login successful!');
       navigate('/cart');
@@ -49,8 +51,24 @@ const Login = () => {
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           required
         />
-        <button type="submit">{loading ? 'Logging in...' : 'Login'}</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
       </form>
+
+      <div className="auth-links">
+        <p>
+          Don’t have an account?{' '}
+          <span className="auth-link" onClick={() => navigate('/signup')}>
+            Sign up
+          </span>
+        </p>
+        <p>
+          <span className="auth-link" onClick={() => navigate('/forgot-password')}>
+            Forgot password?
+          </span>
+        </p>
+      </div>
     </div>
   );
 };
