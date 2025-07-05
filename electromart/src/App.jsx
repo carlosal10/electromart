@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -12,8 +12,8 @@ import CartPage from './pages/CartPage';
 import { CartProvider } from './context/CartContext';
 
 const App = () => (
-  <CartProvider> {/* ✅ Enable Cart Context Globally */}
-    <Router> {/* ✅ Required for Routes to work */}
+  <CartProvider> {/* ✅ Context wrapper only */}
+    <>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -25,7 +25,7 @@ const App = () => (
         <Route path="/cart" element={<CartPage />} />
       </Routes>
       <Footer />
-    </Router>
+    </>
   </CartProvider>
 );
 
