@@ -8,6 +8,7 @@ import Shop from './pages/Shop';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
 import AdminProductList from './pages/AdminProductList';
+import EditProduct from './pages/EditProduct';
 
 const App = () => (
   <>
@@ -19,6 +20,7 @@ const App = () => (
       <Route path="/cart" element={<Cart />} />
       <Route path="/login" element={<Login />} />
       <Route path="/admin/products" element={<AdminProductList />} />
+      <Route path="/admin/edit-product/:id" element={<EditProduct />} />
     </Routes>
     <Footer />
   </>
