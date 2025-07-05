@@ -3,6 +3,7 @@ import './admin-products.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const AdminProductList = () => {
   const [products, setProducts] = useState([]);
@@ -86,12 +87,9 @@ const AdminProductList = () => {
                   <td>{prod.stock}</td>
                   <td>{prod.category}</td>
                   <td>
-                    <button
-                      className="btn-small edit"
-                      onClick={() => navigate(`/admin/edit-product/${prod._id}`)}
-                    >
-                      Edit
-                    </button>
+                   <Link to={`/admin/edit-product/${prod._id}`}>
+  <button className="btn-small edit">Edit</button>
+</Link>
                     <button
                       className="btn-small delete"
                       onClick={() => handleDelete(prod._id)}
