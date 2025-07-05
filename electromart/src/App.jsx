@@ -9,6 +9,7 @@ import Cart from './pages/Cart';
 import Login from './pages/Login';
 import AdminProductList from './pages/AdminProductList';
 import EditProduct from './pages/EditProduct';
+import CartPage from './pages/CartPage';
 
 const App = () => (
   <>
@@ -21,6 +22,7 @@ const App = () => (
       <Route path="/login" element={<Login />} />
       <Route path="/admin/products" element={<AdminProductList />} />
       <Route path="/admin/edit-product/:id" element={<EditProduct />} />
+      <Route path="/cart" element={<CartPage />} />
     </Routes>
     <Footer />
   </>
