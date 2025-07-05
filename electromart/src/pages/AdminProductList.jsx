@@ -26,10 +26,7 @@ const AdminProductList = () => {
     fetchProducts();
   }, []);
 
-  const handleDelete = (id) => {
-    toast.info(`Delete action for product ID: ${id}`);
-    // You can add a confirmation modal + DELETE request here
-  };
+
 
   const handleDelete = async (id) => {
   if (!window.confirm('Are you sure you want to delete this product?')) return;
