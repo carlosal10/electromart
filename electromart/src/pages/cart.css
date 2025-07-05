@@ -1,0 +1,18 @@
+.cart-page table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cart-page th, .cart-page td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.cart-footer {
+  margin-top: 1.5rem;
+  text-align: right;
+}
+
+.cart-footer button {
+  margin-left: 1rem;
+}
