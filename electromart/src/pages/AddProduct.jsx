@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './add-product.css'; // Your CSS
+import './add-product.css';
 
 const AddProduct = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const AddProduct = () => {
     stock: '',
     features: '',
     description: '',
-    photo: '' // Now holds Cloudinary URL
+    photo: '' // Cloudinary URL
   });
 
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -22,7 +22,6 @@ const AddProduct = () => {
   const [categoryName, setCategoryName] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Fetch categories
   useEffect(() => {
     async function fetchCategories() {
       try {
@@ -37,14 +36,22 @@ const AddProduct = () => {
     fetchCategories();
   }, []);
 
-  // Upload image to Cloudinary
+  // ✅ FIXED: missing definition
+  const handleProductChange = (e) => {
+    const { name, value } = e.target;
+    setProductForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handlePhotoChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', 'ecom_public_upload'); // Replace with your preset
+    formData.append('upload_preset', 'ecom_public_upload');
 
     try {
       const res = await fetch('https://api.cloudinary.com/v1_1/dderoi7rp/image/upload', {
@@ -65,49 +72,41 @@ const AddProduct = () => {
       console.error(err);
     }
   };
-const handleProductChange = (e) => {
-  const { name, value } = e.target;
-  setProductForm((prev) => ({
-    ...prev,
-    [name]: value,
-  }));
-};
 
-const handleProductSubmit = async (e) => {
-  e.preventDefault();
+  const handleProductSubmit = async (e) => {
+    e.preventDefault();
 
-  if (!selectedCategory) {
-    toast.error('Please select a category');
-    return;
-  }
+    if (!selectedCategory) {
+      toast.error('Please select a category');
+      return;
+    }
 
-  const { photo, ...rest } = productForm;
-  const payload = {
-    ...rest,
-    category: selectedCategory,
-    photoUrl: photo  // ✅ renamed properly
+    const { photo, ...rest } = productForm;
+    const payload = {
+      ...rest,
+      category: selectedCategory,
+      photoUrl: photo, // ✅ must match backend schema
+    };
+
+    setLoading(true);
+    try {
+      const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || 'Unknown error');
+
+      toast.success('Product added!');
+      setTimeout(() => navigate('/admin/products'), 2000);
+    } catch (error) {
+      toast.error('Error: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
   };
-
-  setLoading(true);
-  try {
-    const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/products', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    const result = await res.json();
-    if (!res.ok) throw new Error(result.error || 'Unknown error');
-
-    toast.success('Product added!');
-    setTimeout(() => navigate('/admin/products'), 2000);
-  } catch (error) {
-    toast.error('Error: ' + error.message);
-  } finally {
-    setLoading(false);
-  }
-};
-
 
   const handleCategorySubmit = async (e) => {
     e.preventDefault();
@@ -118,11 +117,12 @@ const handleProductSubmit = async (e) => {
       const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name })
+        body: JSON.stringify({ name }),
       });
 
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || 'Unknown error');
+
       toast.success('Category added!');
       setCategoryName('');
       setCategories((prev) => [...prev, { name, _id: Date.now().toString() }]);
@@ -132,8 +132,8 @@ const handleProductSubmit = async (e) => {
   };
 
   return (
-<section className="form-section">
-    <h3 style={{ marginTop: '10px' }}>Add Category</h3>
+    <section className="form-section">
+      <h3 style={{ marginTop: '10px' }}>Add Category</h3>
       <form className="product-form" onSubmit={handleCategorySubmit}>
         <div className="form-group">
           <label>Category Name</label>
@@ -148,7 +148,7 @@ const handleProductSubmit = async (e) => {
         </div>
         <button type="submit" className="btn-red">Add Category</button>
       </form>
-    
+
       <ToastContainer />
       <h2>Add New Product</h2>
 
@@ -205,8 +205,6 @@ const handleProductSubmit = async (e) => {
           {loading ? 'Adding...' : 'Add Product'}
         </button>
       </form>
-
-      
     </section>
   );
 };
