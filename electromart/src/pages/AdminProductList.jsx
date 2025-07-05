@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import './admin-products.css'; // Optional: add your own styling
+import './admin-products.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const AdminProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -26,27 +28,24 @@ const AdminProductList = () => {
     fetchProducts();
   }, []);
 
-
-
   const handleDelete = async (id) => {
-  if (!window.confirm('Are you sure you want to delete this product?')) return;
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
 
-  try {
-    const res = await fetch(`https://ecommerce-electronics-0j4e.onrender.com/api/products/${id}`, {
-      method: 'DELETE'
-    });
+    try {
+      const res = await fetch(`https://ecommerce-electronics-0j4e.onrender.com/api/products/${id}`, {
+        method: 'DELETE'
+      });
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to delete');
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to delete');
 
-    toast.success('Product deleted!');
-    setProducts((prev) => prev.filter((p) => p._id !== id));
-  } catch (err) {
-    console.error(err);
-    toast.error('Error deleting product');
-  }
-};
-
+      toast.success('Product deleted!');
+      setProducts((prev) => prev.filter((p) => p._id !== id));
+    } catch (err) {
+      console.error(err);
+      toast.error('Error deleting product');
+    }
+  };
 
   return (
     <section className="admin-products-section">
@@ -87,7 +86,12 @@ const AdminProductList = () => {
                   <td>{prod.stock}</td>
                   <td>{prod.category}</td>
                   <td>
-                    <button className="btn-small edit">Edit</button>
+                    <button
+                      className="btn-small edit"
+                      onClick={() => navigate(`/admin/edit-product/${prod._id}`)}
+                    >
+                      Edit
+                    </button>
                     <button
                       className="btn-small delete"
                       onClick={() => handleDelete(prod._id)}
