@@ -10,6 +10,8 @@ import AdminProductList from './pages/AdminProductList';
 import EditProduct from './pages/EditProduct';
 import CartPage from './pages/CartPage';
 import { CartProvider } from './context/CartContext';
+import Signup from './pages/Signup';
+
 
 const App = () => (
   <CartProvider> {/* ✅ Context wrapper only */}
@@ -23,6 +25,7 @@ const App = () => (
         <Route path="/admin/products" element={<AdminProductList />} />
         <Route path="/admin/edit-product/:id" element={<EditProduct />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
       <Footer />
     </>
