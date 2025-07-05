@@ -31,6 +31,26 @@ const AdminProductList = () => {
     // You can add a confirmation modal + DELETE request here
   };
 
+  const handleDelete = async (id) => {
+  if (!window.confirm('Are you sure you want to delete this product?')) return;
+
+  try {
+    const res = await fetch(`https://ecommerce-electronics-0j4e.onrender.com/api/products/${id}`, {
+      method: 'DELETE'
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to delete');
+
+    toast.success('Product deleted!');
+    setProducts((prev) => prev.filter((p) => p._id !== id));
+  } catch (err) {
+    console.error(err);
+    toast.error('Error deleting product');
+  }
+};
+
+
   return (
     <section className="admin-products-section">
       <ToastContainer />
