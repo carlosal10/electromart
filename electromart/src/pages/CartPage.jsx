@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { CartContext } from '../context/CartContext'; // ✅ Correct context path
-import './cart.css';
 import './styles.css';
 
 // ✅ Hook to extract from context
