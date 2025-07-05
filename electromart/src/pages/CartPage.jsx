@@ -89,7 +89,7 @@ const CartPage = () => {
             <p><strong>Total Items:</strong> {totalItems}</p>
             <p><strong>Total Cost:</strong> Ksh {totalCost}</p>
             <button onClick={handleCheckout}>Proceed to Checkout</button>
-            <button onClick={clearCart} style={{ marginLeft: '1rem' }}>Clear Cart</button>
+            <button onClick={clearCart}>Clear Cart</button>
           </div>
         </>
       )}
