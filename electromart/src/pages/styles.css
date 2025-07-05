@@ -163,6 +163,8 @@
     color: var(--middle-blue);
     text-align: center;
     padding: 1rem;
+       position: fixed;
+  bottom: 0;
   }
 @media (max-width: 768px) {
   .navbar {
