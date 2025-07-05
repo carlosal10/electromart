@@ -164,4 +164,64 @@
     text-align: center;
     padding: 1rem;
   }
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  .navbar nav {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .hero {
+    padding: 4rem 1rem;
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .categories, .products {
+    padding: 2rem 1rem;
+  }
+
+  .category-card, .product-card {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .product-grid, .category-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero .cta-btn {
+    width: 100%;
+    padding: 0.8rem;
+  }
+
+  .navbar .logo {
+    font-size: 1.4rem;
+  }
+
+  .products h2,
+  .categories h2 {
+    font-size: 1.5rem;
+  }
+}
   
