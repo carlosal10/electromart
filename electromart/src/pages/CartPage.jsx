@@ -41,37 +41,48 @@ const CartPage = () => {
           <p><strong>Order ID:</strong> {orderId}</p>
           <table>
             <thead>
-              <tr>
-                <th>Product</th>
-                <th>Specs</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th>Total</th>
-                <th>Remove</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cart.map((item) => (
-                <tr key={item._id}>
-                  <td>{item.name}</td>
-                  <td>
-                    <small><strong>Features:</strong> {item.features}</small><br />
-                    <small><strong>Description:</strong> {item.description}</small>
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={item.quantity}
-                      min="1"
-                      onChange={(e) => updateQuantity(item._id, +e.target.value)}
-                    />
-                  </td>
-                  <td>Ksh {item.price}</td>
-                  <td>Ksh {item.price * item.quantity}</td>
-                  <td><button onClick={() => removeFromCart(item._id)}>Remove</button></td>
-                </tr>
-              ))}
-            </tbody>
+  <tr>
+    <th>Image</th> {/* New */}
+    <th>Product</th>
+    <th>Specs</th>
+    <th>Qty</th>
+    <th>Price</th>
+    <th>Total</th>
+    <th>Remove</th>
+  </tr>
+</thead>
+<tbody>
+  {cart.map((item) => (
+    <tr key={item._id}>
+      <td>
+        <img
+          src={item.photoUrl || 'https://via.placeholder.com/60'}
+          alt={item.name}
+          style={{ width: '60px', borderRadius: '6px' }}
+        />
+      </td>
+      <td>{item.name}</td>
+      <td>
+        <small><strong>Features:</strong> {item.features}</small><br />
+        <small><strong>Description:</strong> {item.description}</small>
+      </td>
+      <td>
+        <input
+          type="number"
+          value={item.quantity}
+          min="1"
+          onChange={(e) => updateQuantity(item._id, +e.target.value)}
+        />
+      </td>
+      <td>Ksh {item.price}</td>
+      <td>Ksh {item.price * item.quantity}</td>
+      <td>
+        <button onClick={() => removeFromCart(item._id)}>Remove</button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
           </table>
 
           <div className="cart-summary">
