@@ -211,13 +211,13 @@
   }
 
  .navbar {
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     padding: 1rem;
   }
 
   .navbar nav {
-    flex-direction: column;
+    flex-direction: row;
     width: 100%;
     gap: 0.5rem;
     margin-top: 1rem;
