@@ -1,7 +1,10 @@
-import React from 'react';
-import { CartContext } from '../context/CartContext';
+import React, { useContext } from 'react';
+import { CartContext } from '../context/CartContext'; // ✅ Correct context path
 import './cart.css';
 import './styles.css';
+
+// ✅ Hook to extract from context
+const useCart = () => useContext(CartContext);
 
 const CartPage = () => {
   const {
@@ -24,7 +27,8 @@ const CartPage = () => {
     };
 
     console.log("Order Data:", order);
-    // You could send this to backend: POST /api/orders
+    // ✅ Optional: POST to backend if you want to save the order
+    // fetch('/api/orders', { method: 'POST', body: JSON.stringify(order), headers: { 'Content-Type': 'application/json' } })
   };
 
   return (
