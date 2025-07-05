@@ -12,7 +12,7 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch('https://your-backend.com/api/auth/signup', {
+      const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
