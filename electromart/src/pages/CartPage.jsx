@@ -113,7 +113,7 @@ const CartPage = () => {
           </div>
         </>
       ) : cart.length === 0 ? (
-        <p>Your cart is empty.</p>
+        <p style={{ textAlign: 'center', color: '#999', fontStyle: 'italic' }}>Your cart is empty.</p>
       ) : (
         <>
           <p>
