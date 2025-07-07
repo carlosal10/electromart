@@ -92,34 +92,27 @@ const CartPage = () => {
       <h2>Your Cart</h2>
 
       {paymentComplete ? (
-        <>
-          <h3>✅ Order Confirmed</h3>
-          <p>
-            <strong>Order ID:</strong> {confirmedOrderId}
-          </p>
-          <p>
-            <strong>Delivery Method:</strong>{' '}
-            {form.paymentMethod === 'cod'
-              ? 'Cash on Delivery'
-              : 'M-Pesa STK Push'}
-          </p>
-          <p>
-            <strong>Email:</strong> {form.email}
-          </p>
-          <p>
-            <strong>Phone:</strong> {form.phone}
-          </p>
-          <p>
-            <strong>Address:</strong> {form.address}
-          </p>
-          <p>
-            <strong>Expected Delivery:</strong> Within 2–3 working days
-          </p>
-          <button onClick={() => navigate('/shop')}>🛒 Back to Shop</button>
-        </>
-      ) : cart.length === 0 ? (
-        <p>Your cart is empty.</p>
-      ) : (
+  <>
+    <h3>✅ Order Confirmed</h3>
+    <div className="order-summary">
+      <p><strong>Order ID:</strong> {confirmedOrderId}</p>
+      <p>
+        <strong>Delivery Method:</strong>{" "}
+        {form.paymentMethod === "cod" ? "Cash on Delivery" : "M-Pesa STK Push"}
+      </p>
+      <p><strong>Email:</strong> {form.email}</p>
+      <p><strong>Phone:</strong> {form.phone}</p>
+      <p><strong>Address:</strong> {form.address}</p>
+      <p>
+        <strong>Expected Delivery:</strong>{" "}
+        <span className="delivery-estimate">Within 2–3 working days</span>
+      </p>
+      <button onClick={() => navigate("/shop")}>🛒 Back to Shop</button>
+    </div>
+  </>
+) : cart.length === 0 ? (
+  <p>Your cart is empty.</p>
+) : (
         <>
           <p>
             <strong>Current Session Order ID:</strong>{' '}
