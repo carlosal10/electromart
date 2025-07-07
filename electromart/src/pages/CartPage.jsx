@@ -39,34 +39,45 @@ const CartPage = () => {
   };
 
   const handlePlaceOrder = async () => {
-    const orderData = {
-      orderId,
-      items: cart,
-      totalItems,
-      totalCost,
-      customerEmail: form.email,
-      customerPhone: form.phone,
-      deliveryAddress: form.address,
-      paymentMethod: form.paymentMethod
-    };
+  const token = localStorage.getItem('token');
 
-    try {
-      const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData)
-      });
+  if (!token) {
+    toast.error('You must be logged in to place an order.');
+    return navigate('/login');
+  }
 
-      if (!res.ok) throw new Error('Failed to save order');
-      const data = await res.json();
-      setPaymentComplete(true);
-      clearCart();
-      toast.success('✅ Order placed successfully!');
-    } catch (err) {
-      console.error(err);
-      toast.error('Failed to place order');
-    }
+  const orderData = {
+    orderId,
+    items: cart,
+    totalItems,
+    totalCost,
+    customerEmail: form.email,
+    customerPhone: form.phone,
+    deliveryAddress: form.address,
+    paymentMethod: form.paymentMethod
   };
+
+  try {
+    const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(orderData)
+    });
+
+    if (!res.ok) throw new Error('Failed to save order');
+    const data = await res.json();
+    setPaymentComplete(true);
+    clearCart();
+    toast.success('✅ Order placed successfully!');
+  } catch (err) {
+    console.error(err);
+    toast.error('Failed to place order');
+  }
+};
+
 
   return (
     <div className="cart-page">
