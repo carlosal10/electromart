@@ -97,7 +97,7 @@ const CartPage = () => {
           <div className="order-summary">
             <p><strong>Order ID:</strong> {confirmedOrderId}</p>
             <p>
-              <strong>Delivery Method:</strong>{' '}
+              <strong>Paymemt Method:</strong>{' '}
               {form.paymentMethod === 'cod'
                 ? 'Cash on Delivery'
                 : 'M-Pesa STK Push'}
