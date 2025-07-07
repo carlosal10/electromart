@@ -449,3 +449,27 @@
   }
 }
 
+.order-summary {
+  background-color: #f6f8fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  max-width: 500px;
+}
+
+.order-summary p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.order-summary strong {
+  color: #222;
+  font-weight: 600;
+}
+
+.order-summary .delivery-estimate {
+  color: #1a8917;
+  font-weight: 500;
+}
