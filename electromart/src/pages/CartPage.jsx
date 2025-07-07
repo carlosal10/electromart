@@ -46,16 +46,18 @@ const CartPage = () => {
     return navigate('/login');
   }
 
-  const orderData = {
-    orderId,
-    items: cart,
-    totalItems,
-    totalCost,
-    customerEmail: form.email,
-    customerPhone: form.phone,
-    deliveryAddress: form.address,
-    paymentMethod: form.paymentMethod
-  };
+ const generatedOrderId = orderId || `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+const orderData = {
+  orderId: generatedOrderId,
+  items: cart,
+  totalItems,
+  totalCost,
+  customerEmail: form.email,
+  customerPhone: form.phone,
+  deliveryAddress: form.address,
+  paymentMethod: form.paymentMethod
+};
 
   try {
     const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/orders', {
