@@ -82,12 +82,13 @@
     display: flex;
   }
 
-  .nav-links {
+ .nav-links {
+    display: flex; /* <-- this line is missing */
+    flex-direction: column;
     position: absolute;
     top: 100%;
     left: 0;
     width: 100%;
-    flex-direction: column;
     background: var(--college-blue);
     padding: 1rem 2rem;
     transform: translateY(-200%);
@@ -100,7 +101,7 @@
     opacity: 1;
     pointer-events: auto;
   }
-
+}
   .nav-links a {
     padding: 0.8rem 0;
     border-bottom: 1px solid #222;
