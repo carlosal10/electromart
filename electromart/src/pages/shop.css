@@ -85,4 +85,24 @@
   .btn-red:hover {
     background-color: #AF0000;
   }
-  
+  /* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .shop-container {
+    flex-direction: column;
+  }
+
+  .filters {
+    order: 2;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .products {
+    order: 1;
+    width: 100%;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+}
