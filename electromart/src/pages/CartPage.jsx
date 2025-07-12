@@ -188,7 +188,7 @@ const CartPage = () => {
                 </button>
                 <button
                   onClick={clearCart}
-                  style={{ marginLeft: '1rem' }}
+                  style={{ marginLeft: '0rem' }}
                 >
                   Clear Cart
                 </button>
