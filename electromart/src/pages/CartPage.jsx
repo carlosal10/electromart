@@ -15,18 +15,20 @@ const CartPage = () => {
     clearCart,
     totalItems,
     totalCost,
-    orderId
+    orderId,
   } = useCart();
 
   const navigate = useNavigate();
   const [showCheckout, setShowCheckout] = useState(false);
   const [paymentComplete, setPaymentComplete] = useState(false);
   const [confirmedOrderId, setConfirmedOrderId] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState({
     email: '',
     phone: '',
     address: '',
-    paymentMethod: 'mpesa'
+    paymentMethod: 'mpesa',
+    mpesaPhone: '',
   });
 
   const isLoggedIn = !!localStorage.getItem('token');
@@ -46,59 +48,77 @@ const CartPage = () => {
       return navigate('/login');
     }
 
-    if (form.paymentMethod === 'mpesa' && !form.phone) {
-      toast.error('Please enter M-Pesa phone number');
-      return;
+    if (form.paymentMethod === 'mpesa' && !form.mpesaPhone.trim()) {
+      return toast.error('Enter a valid phone number for M-Pesa payment.');
     }
 
-    const genOrderId = orderId || `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    const generatedOrderId =
+      orderId || `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
     const orderData = {
-      orderId: genOrderId,
+      orderId: generatedOrderId,
       items: cart,
       totalItems,
       totalCost,
       customerEmail: form.email,
       customerPhone: form.phone,
       deliveryAddress: form.address,
-      paymentMethod: form.paymentMethod
+      paymentMethod: form.paymentMethod,
     };
 
     try {
-      // initiate STK push if chosen
+      setIsLoading(true);
+
+      // Optional: Trigger M-Pesa STK Push first if needed
       if (form.paymentMethod === 'mpesa') {
-        const resPush = await fetch('/api/mpesa/stk-push', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            phoneNumber: form.phone,
-            amount: totalCost,
-            accountReference: genOrderId
-          })
-        });
-        const jsonPush = await resPush.json();
-        if (!resPush.ok) throw new Error(jsonPush.error || 'STK Push failed');
-        toast.info('🔔 Payment prompt sent to your phone. Complete payment to proceed.');
+        const mpesaRes = await fetch(
+          'https://ecommerce-electronics-0j4e.onrender.com/api/payments/stkpush',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              phone: form.mpesaPhone,
+              amount: totalCost,
+              orderId: generatedOrderId,
+            }),
+          }
+        );
+
+        const mpesaJson = await mpesaRes.json();
+        if (!mpesaRes.ok || mpesaJson.ResponseCode !== '0') {
+          throw new Error(mpesaJson.errorMessage || 'Failed to send M-Pesa prompt.');
+        }
+
+        toast.info('📲 Check your phone to complete M-Pesa payment...');
       }
 
-      // save order
-      const resOrder = await fetch('/api/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(orderData)
-      });
-      if (!resOrder.ok) throw new Error('Failed to save order');
-      await resOrder.json();
+      const res = await fetch(
+        'https://ecommerce-electronics-0j4e.onrender.com/api/orders',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(orderData),
+        }
+      );
 
-      setConfirmedOrderId(genOrderId);
+      if (!res.ok) throw new Error('Failed to save order');
+      await res.json();
+
+      setConfirmedOrderId(generatedOrderId);
       setPaymentComplete(true);
       clearCart();
       toast.success('✅ Order placed successfully!');
     } catch (err) {
       console.error(err);
-      toast.error('Failed to place order: ' + err.message);
+      toast.error(err.message || 'Failed to place order');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -112,19 +132,21 @@ const CartPage = () => {
           <h3>✅ Order Confirmed</h3>
           <div className="order-summary">
             <p><strong>Order ID:</strong> {confirmedOrderId}</p>
-            <p><strong>Method:</strong> {form.paymentMethod === 'cod' ? 'Cash on Delivery' : 'M‑Pesa STK Push'}</p>
+            <p><strong>Payment Method:</strong> {form.paymentMethod === 'cod' ? 'Cash on Delivery' : 'M-Pesa STK Push'}</p>
             <p><strong>Email:</strong> {form.email}</p>
-            {form.paymentMethod === 'mpesa' && <p><strong>Paid from:</strong> {form.phone}</p>}
+            <p><strong>Phone:</strong> {form.phone}</p>
             <p><strong>Address:</strong> {form.address}</p>
-            <p><strong>Expected Delivery:</strong> Within 2–3 working days</p>
+            <p><strong>Expected Delivery:</strong> <span className="delivery-estimate">Within 2–3 working days</span></p>
             <button onClick={() => navigate('/shop')}>🛒 Back to Shop</button>
           </div>
         </>
       ) : cart.length === 0 ? (
-        <p>Your cart is empty.</p>
+        <p style={{ textAlign: 'center', color: '#999', fontStyle: 'italic' }}>
+          Your cart is empty.
+        </p>
       ) : (
         <>
-          <p><strong>Session Order ID:</strong> {orderId || '(Generated at checkout)'}</p>
+          <p><strong>Current Session Order ID:</strong> {orderId || '(Will be generated on checkout)'}</p>
           <table>
             <thead>
               <tr>
@@ -138,15 +160,15 @@ const CartPage = () => {
               </tr>
             </thead>
             <tbody>
-              {cart.map(item => (
+              {cart.map((item) => (
                 <tr key={item._id}>
-                  <td><img src={item.photoUrl || 'https://via.placeholder.com/60'} alt={item.name} style={{ width: 60, borderRadius: 6 }}/></td>
+                  <td><img src={item.photoUrl || 'https://via.placeholder.com/60'} alt={item.name} style={{ width: '60px', borderRadius: '6px' }} /></td>
                   <td>{item.name}</td>
                   <td>
-                    <small><strong>Features:</strong> {item.features}</small><br/>
+                    <small><strong>Features:</strong> {item.features}</small><br />
                     <small><strong>Description:</strong> {item.description}</small>
                   </td>
-                  <td><input type="number" value={item.quantity} min="1" onChange={e => updateQuantity(item._id, +e.target.value)} /></td>
+                  <td><input type="number" value={item.quantity} min="1" onChange={(e) => updateQuantity(item._id, +e.target.value)} /></td>
                   <td>Ksh {item.price}</td>
                   <td>Ksh {item.price * item.quantity}</td>
                   <td><button onClick={() => removeFromCart(item._id)}>Remove</button></td>
@@ -166,14 +188,19 @@ const CartPage = () => {
             ) : (
               <div className="checkout-form">
                 <h3>Checkout Details</h3>
-                <input type="email" placeholder="Email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value})} required />
-                <input type="text" placeholder="Phone Number" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value})} required />
-                <input type="text" placeholder="Residential Address" value={form.address} onChange={e => setForm({ ...form, address: e.target.value})} required />
-                <select value={form.paymentMethod} onChange={e => setForm({ ...form, paymentMethod: e.target.value })}>
-                  <option value="mpesa">Pay via M‑Pesa</option>
+                <input type="email" placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+                <input type="text" placeholder="Phone Number" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} required />
+                <input type="text" placeholder="Residential Address" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} required />
+                <select value={form.paymentMethod} onChange={(e) => setForm({ ...form, paymentMethod: e.target.value })}>
+                  <option value="mpesa">Pay via M-Pesa</option>
                   <option value="cod">Cash on Delivery</option>
                 </select>
-                <button onClick={handlePlaceOrder}>Place Order</button>
+                {form.paymentMethod === 'mpesa' && (
+                  <input type="text" placeholder="M-Pesa Phone Number" value={form.mpesaPhone} onChange={(e) => setForm({ ...form, mpesaPhone: e.target.value })} required />
+                )}
+                <button onClick={handlePlaceOrder} disabled={isLoading}>
+                  {isLoading ? 'Processing...' : 'Place Order'}
+                </button>
               </div>
             )}
           </div>
