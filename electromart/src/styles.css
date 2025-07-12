@@ -19,32 +19,7 @@
     color: var(--morning-blue);
     min-height: 100vh;
   }
-  
-  /* Navbar */
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background: var(--college-blue);
-  }
-  
-  .navbar .logo {
-    font-weight: bold;
-    font-size: 1.6rem;
-    color: var(--morning-blue);
-  }
-  
-  .navbar nav a {
-    color: var(--middle-blue);
-    margin-left: 2rem;
-    text-decoration: none;
-    font-weight: 500;
-  }
-  
-  .navbar nav a:hover {
-    color: red;
-  }
+
   
   /* Hero */
   .hero {
@@ -159,4 +134,70 @@
     text-align: center;
     padding: 1rem;
   }
+/* Responsive Mobile Styling */
+@media (max-width: 768px) {
+  /* Hero */
+  .hero {
+    padding: 4rem 1.5rem;
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .hero .cta-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  /* Category Section */
+  .categories {
+    padding: 2rem 1.5rem;
+  }
+
+  .categories h2 {
+    font-size: 1.6rem;
+  }
+
+  .category-grid {
+    gap: 1rem;
+  }
+
+  .category-card {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  /* Product Section */
+  .products {
+    padding: 2rem 1.5rem;
+  }
+
+  .products h2 {
+    font-size: 1.6rem;
+  }
+
+  .product-grid {
+    gap: 1rem;
+  }
+
+  .product-card {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+}
+
   
