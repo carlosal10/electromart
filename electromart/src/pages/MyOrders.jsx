@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './styles.css';
 import './MyOrders.css';
 import { toast } from 'react-toastify';
 
