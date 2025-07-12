@@ -7,7 +7,7 @@ const MyOrders = () => {
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    fetch('/api/orders/my-orders', {
+    fetch('https://ecommerce-electronics-0j4e.onrender.com/api/orders/my-orders', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
