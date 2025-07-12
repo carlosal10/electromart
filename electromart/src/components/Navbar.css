@@ -49,7 +49,7 @@
 .hamburger .bar {
   width: 24px;
   height: 3px;
-  background: var(--middle-blue);
+  background: white;
   border-radius: 3px;
 }
 
