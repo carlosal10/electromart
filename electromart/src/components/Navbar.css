@@ -1,3 +1,26 @@
+/* Core styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  color: white;
+  padding: 1rem 2rem;
+  position: relative;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  transition: transform 0.3s ease;
+}
+
 .nav-links a {
   color: white;
   text-decoration: none;
