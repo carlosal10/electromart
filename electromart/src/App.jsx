@@ -11,7 +11,7 @@ import EditProduct from './pages/EditProduct';
 import CartPage from './pages/CartPage';
 import { CartProvider } from './context/CartContext';
 import Signup from './pages/Signup';
-import MyOrders from './MyOrders';
+import MyOrders from './pages/MyOrders';
 
 
 const App = () => (
