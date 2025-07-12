@@ -18,6 +18,7 @@
     font-family: 'Segoe UI', sans-serif;
     color: var(--morning-blue);
     min-height: 100vh;
+      margin: 0;
   }
   
   h1 {
