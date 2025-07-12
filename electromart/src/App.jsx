@@ -11,6 +11,7 @@ import EditProduct from './pages/EditProduct';
 import CartPage from './pages/CartPage';
 import { CartProvider } from './context/CartContext';
 import Signup from './pages/Signup';
+import MyOrders from './MyOrders';
 
 
 const App = () => (
@@ -26,6 +27,7 @@ const App = () => (
         <Route path="/admin/edit-product/:id" element={<EditProduct />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/my-orders" element={<MyOrders />} />
       </Routes>
       <Footer />
     </>
