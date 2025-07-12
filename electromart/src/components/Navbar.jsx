@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Home, PlusSquare, ShoppingBag, ShoppingCart, LogIn } from 'lucide-react'; // Icons
+import { Home, PlusSquare, ShoppingBag, ShoppingCart, LogIn, FileText } from 'lucide-react'; // Added FileText icon
 import './Navbar.css';
 
 const Navbar = () => {
@@ -40,6 +40,9 @@ const Navbar = () => {
         </Link>
         <Link to="/cart" onClick={() => setMenuOpen(false)}>
           <ShoppingCart size={18} /> Cart
+        </Link>
+        <Link to="/my-orders" onClick={() => setMenuOpen(false)}>
+          <FileText size={18} /> My Orders
         </Link>
         <Link to="/login" onClick={() => setMenuOpen(false)}>
           <LogIn size={18} /> Login
