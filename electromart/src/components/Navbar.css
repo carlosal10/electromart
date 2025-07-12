@@ -1,4 +1,13 @@
-/* Hamburger button (hidden on desktop) */
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+}
+
+/* Hamburger icon */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -10,13 +19,13 @@
 }
 
 .hamburger .bar {
-  width: 25px;
+  width: 24px;
   height: 3px;
   background: white;
-  border-radius: 2px;
+  border-radius: 3px;
 }
 
-/* Mobile Styles */
+/* Mobile styles */
 @media (max-width: 768px) {
   .hamburger {
     display: flex;
@@ -26,19 +35,23 @@
     position: absolute;
     top: 100%;
     left: 0;
-    right: 0;
+    width: 100%;
     flex-direction: column;
-    background: #222;
+    background: #111;
     padding: 1rem 2rem;
-    display: none;
+    transform: translateY(-200%);
+    opacity: 0;
+    pointer-events: none;
   }
 
   .nav-links.open {
-    display: flex;
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .nav-links a {
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #333;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #222;
   }
 }
