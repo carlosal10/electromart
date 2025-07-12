@@ -27,6 +27,7 @@ const CartPage = () => {
     phone: '',
     address: '',
     paymentMethod: 'mpesa',
+    mpesaPhone: '',
   });
 
   const isLoggedIn = !!localStorage.getItem('token');
@@ -76,6 +77,23 @@ const CartPage = () => {
       if (!res.ok) throw new Error('Failed to save order');
 
       await res.json();
+
+      // Optional: Trigger M-Pesa STK Push
+      if (form.paymentMethod === 'mpesa') {
+        await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/payments/stkpush', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            phone: form.mpesaPhone,
+            amount: totalCost,
+            orderId: generatedOrderId,
+          }),
+        });
+      }
+
       setConfirmedOrderId(generatedOrderId);
       setPaymentComplete(true);
       clearCart();
@@ -96,19 +114,11 @@ const CartPage = () => {
           <h3>✅ Order Confirmed</h3>
           <div className="order-summary">
             <p><strong>Order ID:</strong> {confirmedOrderId}</p>
-            <p>
-              <strong>Paymemt Method:</strong>{' '}
-              {form.paymentMethod === 'cod'
-                ? 'Cash on Delivery'
-                : 'M-Pesa STK Push'}
-            </p>
+            <p><strong>Payment Method:</strong> {form.paymentMethod === 'cod' ? 'Cash on Delivery' : 'M-Pesa STK Push'}</p>
             <p><strong>Email:</strong> {form.email}</p>
             <p><strong>Phone:</strong> {form.phone}</p>
             <p><strong>Address:</strong> {form.address}</p>
-            <p>
-              <strong>Expected Delivery:</strong>{' '}
-              <span className="delivery-estimate">Within 2–3 working days</span>
-            </p>
+            <p><strong>Expected Delivery:</strong> <span className="delivery-estimate">Within 2–3 working days</span></p>
             <button onClick={() => navigate('/shop')}>🛒 Back to Shop</button>
           </div>
         </>
@@ -116,10 +126,7 @@ const CartPage = () => {
         <p style={{ textAlign: 'center', color: '#999', fontStyle: 'italic' }}>Your cart is empty.</p>
       ) : (
         <>
-          <p>
-            <strong>Current Session Order ID:</strong>{' '}
-            {orderId || '(Will be generated on checkout)'}
-          </p>
+          <p><strong>Current Session Order ID:</strong> {orderId || '(Will be generated on checkout)'}</p>
           <table>
             <thead>
               <tr>
@@ -135,103 +142,39 @@ const CartPage = () => {
             <tbody>
               {cart.map((item) => (
                 <tr key={item._id}>
-                  <td>
-                    <img
-                      src={item.photoUrl || 'https://via.placeholder.com/60'}
-                      alt={item.name}
-                      style={{ width: '60px', borderRadius: '6px' }}
-                    />
-                  </td>
+                  <td><img src={item.photoUrl || 'https://via.placeholder.com/60'} alt={item.name} style={{ width: '60px', borderRadius: '6px' }} /></td>
                   <td>{item.name}</td>
-                  <td>
-                    <small>
-                      <strong>Features:</strong> {item.features}
-                    </small>
-                    <br />
-                    <small>
-                      <strong>Description:</strong> {item.description}
-                    </small>
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={item.quantity}
-                      min="1"
-                      onChange={(e) =>
-                        updateQuantity(item._id, +e.target.value)
-                      }
-                    />
-                  </td>
+                  <td><small><strong>Features:</strong> {item.features}</small><br /><small><strong>Description:</strong> {item.description}</small></td>
+                  <td><input type="number" value={item.quantity} min="1" onChange={(e) => updateQuantity(item._id, +e.target.value)} /></td>
                   <td>Ksh {item.price}</td>
                   <td>Ksh {item.price * item.quantity}</td>
-                  <td>
-                    <button onClick={() => removeFromCart(item._id)}>
-                      Remove
-                    </button>
-                  </td>
+                  <td><button onClick={() => removeFromCart(item._id)}>Remove</button></td>
                 </tr>
               ))}
             </tbody>
           </table>
 
           <div className="cart-summary">
-            <p>
-              <strong>Total Items:</strong> {totalItems}
-            </p>
-            <p>
-              <strong>Total Cost:</strong> Ksh {totalCost}
-            </p>
+            <p><strong>Total Items:</strong> {totalItems}</p>
+            <p><strong>Total Cost:</strong> Ksh {totalCost}</p>
             {!showCheckout ? (
               <>
-                <button onClick={handleCheckoutClick}>
-                  Proceed to Checkout
-                </button>
-                <button
-                  onClick={clearCart}
-                  style={{ marginLeft: '0rem' }}
-                >
-                  Clear Cart
-                </button>
+                <button onClick={handleCheckoutClick}>Proceed to Checkout</button>
+                <button onClick={clearCart} style={{ marginLeft: '1rem' }}>Clear Cart</button>
               </>
             ) : (
               <div className="checkout-form">
                 <h3>Checkout Details</h3>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={form.email}
-                  onChange={(e) =>
-                    setForm({ ...form, email: e.target.value })
-                  }
-                  required
-                />
-                <input
-                  type="text"
-                  placeholder="Phone Number"
-                  value={form.phone}
-                  onChange={(e) =>
-                    setForm({ ...form, phone: e.target.value })
-                  }
-                  required
-                />
-                <input
-                  type="text"
-                  placeholder="Residential Address"
-                  value={form.address}
-                  onChange={(e) =>
-                    setForm({ ...form, address: e.target.value })
-                  }
-                  required
-                />
-                <select
-                  value={form.paymentMethod}
-                  onChange={(e) =>
-                    setForm({ ...form, paymentMethod: e.target.value })
-                  }
-                >
+                <input type="email" placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+                <input type="text" placeholder="Phone Number" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} required />
+                <input type="text" placeholder="Residential Address" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} required />
+                <select value={form.paymentMethod} onChange={(e) => setForm({ ...form, paymentMethod: e.target.value })}>
                   <option value="mpesa">Pay via M-Pesa</option>
                   <option value="cod">Cash on Delivery</option>
                 </select>
+                {form.paymentMethod === 'mpesa' && (
+                  <input type="text" placeholder="M-Pesa Phone Number" value={form.mpesaPhone} onChange={(e) => setForm({ ...form, mpesaPhone: e.target.value })} required />
+                )}
                 <button onClick={handlePlaceOrder}>Place Order</button>
               </div>
             )}
