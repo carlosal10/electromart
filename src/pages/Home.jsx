@@ -4,31 +4,7 @@ import './App.css';
 function App() {
   return (
     <div className="app">
-      {/* Header Section */}
-      <header className="header">
-        <div className="location">4 Boston</div>
-        
-        <nav className="nav-links">
-          <a href="#">Vendors</a>
-          <a href="#">Promotions</a>
-          <a href="#">Brands</a>
-          <a href="#">Newest</a>
-          <a href="#">Bestsellers</a>
-          <a href="#">Onsale</a>
-          <a href="#">$v</a>
-          <a href="#">English</a>
-          <a href="#">y</a>
-        </nav>
-        
-        <div className="search-bar">
-          <input 
-            type="text" 
-            placeholder="Searcl"
-            value="对roo777-777- lh @ 如"
-          />
-          <button className="search-icon">Q</button>
-        </div>
-      </header>
+    
 
       {/* Main Content */}
       <div className="content">
