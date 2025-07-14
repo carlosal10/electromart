@@ -1,5 +1,5 @@
 // src/App.js
-import React, { useState, useEffect } from 'react';
+import React, { components, useState, useEffect } from 'react';
 import Header from '../components/Navbar';
 import Hero from '../components/Hero';
 import './App.css';
