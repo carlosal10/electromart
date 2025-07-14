@@ -1,27 +1,80 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // ✅ import Link
-import './styles.css';
+import './App.css';
 
-const Home = () => {
+function App() {
   return (
-   <> <section className="hero">
-      <div className="hero-content">
-        <h1>Upgrade Your Tech</h1>
-        <p>Best deals on the latest electronics</p>
-        <Link to="/shop" className="cta-btn">Shop Now</Link>
+    <div className="app">
+      {/* Header Section */}
+      <header className="header">
+        <div className="location">4 Boston</div>
+        
+        <nav className="nav-links">
+          <a href="#">Vendors</a>
+          <a href="#">Promotions</a>
+          <a href="#">Brands</a>
+          <a href="#">Newest</a>
+          <a href="#">Bestsellers</a>
+          <a href="#">Onsale</a>
+          <a href="#">$v</a>
+          <a href="#">English</a>
+          <a href="#">y</a>
+        </nav>
+        
+        <div className="search-bar">
+          <input 
+            type="text" 
+            placeholder="Searcl"
+            value="对roo777-777- lh @ 如"
+          />
+          <button className="search-icon">Q</button>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="content">
+        <h1>Table of contents</h1>
+        
+        <section className="drone-section">
+          <h2>Triple-camera drone</h2>
+          <h3>DJI Mavic 3 Pro Fly More Combo</h3>
+          <p>The DJI Mavic 3 Pro is a powerful triple-camera drone that unlocks new perspectives for aerial photography and filmmaking.</p>
+          <button className="browse-button">Browse Mavic</button>
+        </section>
+
+        <hr className="divider" />
+
+        <div className="diagram-section">
+          <div className="diagram">
+            <h3>Diagram</h3>
+            <ul>
+              <li><strong>Marks:</strong></li>
+              <li>- Categories</li>
+              <li>- For example PlayStation</li>
+            </ul>
+          </div>
+
+          <div className="diagram">
+            <h3>Diagram</h3>
+            <ul>
+              <li><strong>Vendors:</strong> Promotions</li>
+              <li>- Brands:</li>
+              <li>- Newest:</li>
+              <li>- Bestsellers:</li>
+              <li>- On sale:</li>
+              <li>- English</li>
+            </ul>
+          </div>
+
+          <div className="diagram">
+            <h3>Diagram</h3>
+            <ul>
+              <li><strong>Ack a question</strong></li>
+            </ul>
+          </div>
+        </div>
       </div>
-    </section>
-
-    <section className="products">
-    <h2>Featured Products</h2>
-    <div className="product-grid">
-      <div className="product-card">Product 1</div>
-      <div className="product-card">Product 2</div>
-      <div className="product-card">Product 3</div>
     </div>
-  </section>
-  </>
   );
-};
+}
 
-export default Home;
+export default App;
