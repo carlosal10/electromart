@@ -1,55 +1,26 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Home, PlusSquare, ShoppingBag, ShoppingCart, LogIn, FileText } from 'lucide-react'; // Added FileText icon
-import './Navbar.css';
+import React from 'react';
+import styles from './Navbar.css';
 
-const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef();
+const Header = () => (
+  <header className={styles.navbar}>
+    <div className={styles.logo}>Marketplace Demo</div>
+    <nav>
+      <ul className={styles.navLinks}>
+        <li><a href="#">Categories</a></li>
+        <li><a href="#">Support</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </nav>
+    <div className={styles.searchContact}>
+      <input type="text" placeholder="Search products..." />
+      <span>📞 +1(800)777-7777</span>
+    </div>
+    <div className={styles.iconStrip}>
+      <span>👤</span>
+      <span>❤️</span>
+      <span>🛒</span>
+    </div>
+  </header>
+);
 
-  // Close menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  return (
-    <header className="navbar">
-      <div className="logo">ElectroMart</div>
-
-      <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-        <span className="bar" />
-        <span className="bar" />
-        <span className="bar" />
-      </button>
-
-      <nav ref={menuRef} className={`nav-links ${menuOpen ? 'open' : ''}`}>
-        <Link to="/" onClick={() => setMenuOpen(false)}>
-          <Home size={18} /> Home
-        </Link>
-        <Link to="/add-product" onClick={() => setMenuOpen(false)}>
-          <PlusSquare size={18} /> Add Product
-        </Link>
-        <Link to="/shop" onClick={() => setMenuOpen(false)}>
-          <ShoppingBag size={18} /> Shop
-        </Link>
-        <Link to="/cart" onClick={() => setMenuOpen(false)}>
-          <ShoppingCart size={18} /> Cart
-        </Link>
-        <Link to="/my-orders" onClick={() => setMenuOpen(false)}>
-          <FileText size={18} /> My Orders
-        </Link>
-        <Link to="/login" onClick={() => setMenuOpen(false)}>
-          <LogIn size={18} /> Login
-        </Link>
-      </nav>
-    </header>
-  );
-};
-
-export default Navbar;
+export default Header;
