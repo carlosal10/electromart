@@ -1,109 +1,37 @@
-/* Navbar Base */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background: var(--college-blue);
-  position: relative;
-  z-index: 1000;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.navbar .logo {
+.logo {
+  font-size: 1.8rem;
   font-weight: bold;
-  font-size: 1.6rem;
-  color: var(--morning-blue);
 }
 
-/* Desktop Navigation */
-.nav-links {
+.navLinks {
   display: flex;
   gap: 2rem;
-  transition: transform 0.3s ease;
+  list-style: none;
 }
 
-.nav-links a {
-  color: var(--middle-blue);
+.navLinks a {
   text-decoration: none;
+  color: #333;
   font-weight: 500;
+}
+
+.searchContact {
   display: flex;
+  gap: 1rem;
   align-items: center;
-  gap: 0.4rem;
 }
 
-.nav-links a:hover {
-  color: red;
-}
-
-/* Hamburger Icon (mobile only) */
-.hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 4px;
+.iconStrip span {
+  margin-left: 1rem;
+  font-size: 1.4rem;
   cursor: pointer;
-  background: none;
-  border: none;
-  z-index: 1001;
 }
-
-.hamburger .bar {
-  width: 24px;
-  height: 3px;
-  background: white;
-  border-radius: 3px;
-}
-
-/* Cart Badge */
-.cart-link {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.cart-badge {
-  position: absolute;
-  top: -6px;
-  right: -10px;
-  background: crimson;
-  color: white;
-  font-size: 0.7rem;
-  font-weight: bold;
-  border-radius: 50%;
-  padding: 2px 6px;
-  line-height: 1;
-  min-width: 18px;
-  text-align: center;
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .hamburger {
-    display: flex;
-  }
-
- .nav-links {
-    display: flex; /* <-- this line is missing */
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: var(--college-blue);
-    padding: 1rem 2rem;
-    transform: translateY(-200%);
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .nav-links.open {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-  .nav-links a {
-    padding: 0.8rem 0;
-    border-bottom: 1px solid #222;
-  }
-
