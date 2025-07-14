@@ -28,7 +28,7 @@ const Home = () => {
       <Header />
       <main>
         <div className="content-header">
-          <h1>Table of contents</h1>
+          <h1>Featured Products</h1>
           <nav className="toc-nav">
             <a href="#marketplace">Marketplace</a>
           </nav>
@@ -39,7 +39,7 @@ const Home = () => {
         ) : heroData ? (
           <Hero data={heroData} />
         ) : (
-          <div className="error">No hero content found</div>
+          <div className="error">No content found</div>
         )}
 
         <section className="marketplace" id="marketplace">
