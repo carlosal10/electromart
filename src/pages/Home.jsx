@@ -1,54 +1,57 @@
-import React from 'react';
+// src/App.js
+import React, { useState, useEffect } from 'react';
+import Header from './components/Header';
+import Hero from './components/Hero';
 import './App.css';
 
 function App() {
+  const [heroData, setHeroData] = useState(null);
+  
+  // Simulating API call to fetch hero content
+  useEffect(() => {
+    // This would be replaced with actual API call
+    const fetchHeroData = async () => {
+      // Simulating API response delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setHeroData({
+        title: "Triple-camera drone",
+        subtitle: "DJI Mavic 3 Pro Fly More Combo",
+        description: "The DJI Mavic 3 Pro is a powerful triple-camera drone that unlocks new perspectives for aerial photography and filmmaking.",
+        buttonText: "Browse Mavic",
+        buttonLink: "https://www.dji-mavic.com",
+        videoUrl: "/videos/drone-promo.mp4" // This would come from MongoDB
+      });
+    };
+    
+    fetchHeroData();
+  }, []);
+
   return (
     <div className="app">
-    
-
-      {/* Main Content */}
-      <div className="content">
-        <h1>Table of contents</h1>
-        
-        <section className="drone-section">
-          <h2>Triple-camera drone</h2>
-          <h3>DJI Mavic 3 Pro Fly More Combo</h3>
-          <p>The DJI Mavic 3 Pro is a powerful triple-camera drone that unlocks new perspectives for aerial photography and filmmaking.</p>
-          <button className="browse-button">Browse Mavic</button>
-        </section>
-
-        <hr className="divider" />
-
-        <div className="diagram-section">
-          <div className="diagram">
-            <h3>Diagram</h3>
-            <ul>
-              <li><strong>Marks:</strong></li>
-              <li>- Categories</li>
-              <li>- For example PlayStation</li>
-            </ul>
-          </div>
-
-          <div className="diagram">
-            <h3>Diagram</h3>
-            <ul>
-              <li><strong>Vendors:</strong> Promotions</li>
-              <li>- Brands:</li>
-              <li>- Newest:</li>
-              <li>- Bestsellers:</li>
-              <li>- On sale:</li>
-              <li>- English</li>
-            </ul>
-          </div>
-
-          <div className="diagram">
-            <h3>Diagram</h3>
-            <ul>
-              <li><strong>Ack a question</strong></li>
-            </ul>
-          </div>
+      <Header />
+      <main>
+        <div className="content-header">
+          <h1>Table of contents</h1>
+          <nav className="toc-nav">
+            <a href="#marketplace">Marketplace</a>
+          </nav>
         </div>
-      </div>
+        
+        {heroData ? (
+          <Hero data={heroData} />
+        ) : (
+          <div className="loading">Loading featured product...</div>
+        )}
+        
+        <section className="marketplace" id="marketplace">
+          <h2>Marketplace</h2>
+          <div className="categories">
+            <span className="category-tag">Categories</span>
+            {/* Categories would be dynamically populated */}
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
