@@ -23,30 +23,25 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="app">
-      <Header />
-      <main>
-        <div className="content-header">
-          <h1>Featured Products</h1>
+    <main className="home-content">
+      <h1 className="section-title">Featured Products</h1>
+
+      {loading ? (
+        <div className="loading">Loading featured product...</div>
+      ) : heroData ? (
+        <Hero data={heroData} />
+      ) : (
+        <div className="error">No featured content available.</div>
+      )}
+
+      <section className="marketplace">
+        <h2 className="section-title">Marketplace</h2>
+        <div className="categories">
+          <span className="category-tag">Categories</span>
+          {/* TODO: Dynamically render categories here */}
         </div>
-
-        {loading ? (
-          <div className="loading">Loading featured product...</div>
-        ) : heroData ? (
-          <Hero data={heroData} />
-        ) : (
-          <div className="error">No content found</div>
-        )}
-
-        <section className="marketplace" id="marketplace">
-          <h2>Marketplace</h2>
-          <div className="categories">
-            <span className="category-tag">Categories</span>
-            {/* You can add category listing here */}
-          </div>
-        </section>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 };
 
