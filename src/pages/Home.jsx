@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../components/Navbar'; // Adjust path if needed
 import Hero from '../components/Hero';
 import './App.css';
 
@@ -29,9 +28,6 @@ const Home = () => {
       <main>
         <div className="content-header">
           <h1>Featured Products</h1>
-          <nav className="toc-nav">
-            <a href="#marketplace">Marketplace</a>
-          </nav>
         </div>
 
         {loading ? (
