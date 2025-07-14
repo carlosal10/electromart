@@ -18,8 +18,8 @@ const Home = () => {
     async function load() {
       try {
         const [hRes, cRes] = await Promise.all([
-          fetch('/api/hero'),
-          fetch('/api/categories')
+          fetch('https://ecommerce-electronics-0j4e.onrender.com/api/hero'),
+          fetch('https://ecommerce-electronics-0j4e.onrender.com/api/categories')
         ]);
         const hData = await hRes.json();
         const cData = await cRes.json();
