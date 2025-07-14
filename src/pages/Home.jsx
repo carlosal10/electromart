@@ -5,64 +5,111 @@ import './App.css';
 const Home = () => {
   const [heroData, setHeroData] = useState(null);
   const [categories, setCategories] = useState([]);
+
   const [loadingHero, setLoadingHero] = useState(true);
-  const [loadingCategories, setLoadingCategories] = useState(true);
+  const [loadingCats, setLoadingCats] = useState(true);
+  const [products, setProducts] = useState([]);
+
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [activeSub, setActiveSub] = useState(null);
+  const [loadingProducts, setLoadingProducts] = useState(false);
 
   useEffect(() => {
-    const fetchHeroData = async () => {
+    async function load() {
       try {
-        const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/hero');
-        const data = await res.json();
-        setHeroData(data);
+        const [hRes, cRes] = await Promise.all([
+          fetch('/api/hero'),
+          fetch('/api/categories')
+        ]);
+        const hData = await hRes.json();
+        const cData = await cRes.json();
+        setHeroData(hData);
+        setCategories(cData);
       } catch (err) {
-        console.error('Failed to load hero data:', err);
+        console.error(err);
       } finally {
         setLoadingHero(false);
+        setLoadingCats(false);
       }
-    };
-
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/categories');
-        const data = await res.json();
-        setCategories(data);
-      } catch (err) {
-        console.error('Failed to load categories:', err);
-      } finally {
-        setLoadingCategories(false);
-      }
-    };
-
-    fetchHeroData();
-    fetchCategories();
+    }
+    load();
   }, []);
 
+  useEffect(() => {
+    if (!activeCategory) return;
+    setLoadingProducts(true);
+    const params = new URLSearchParams({ category: activeCategory });
+    if (activeSub) params.set('subcategory', activeSub);
+
+    fetch(`/api/products?${params.toString()}`)
+      .then(res => res.json())
+      .then(setProducts)
+      .catch(console.error)
+      .finally(() => setLoadingProducts(false));
+  }, [activeCategory, activeSub]);
+
   return (
-    <main className="home-content">
-      <h1 className="section-title">Featured Product</h1>
-
-      {loadingHero ? (
-        <div className="loading">Loading hero content...</div>
-      ) : heroData ? (
-        <Hero data={heroData} />
-      ) : (
-        <div className="error">No featured product available.</div>
-      )}
-
-      <h2 className="section-title" style={{ marginTop: '3rem' }}>Categories</h2>
-      {loadingCategories ? (
-        <div className="loading">Loading categories...</div>
-      ) : categories.length ? (
-        <ul className="category-list">
-          {categories.map((cat) => (
-            <li key={cat._id} className="category-item">
-              {cat.name}
-            </li>
+    <main className="home-grid">
+      <div className="sidebar">
+        <h3>Categories</h3>
+        {loadingCats
+          ? <p>Loading...</p>
+          : categories.map(cat => (
+            <div key={cat._id} className="cat-group">
+              <button
+                className={activeCategory === cat.name ? 'cat-btn active' : 'cat-btn'}
+                onClick={() => {
+                  setActiveCategory(cat.name);
+                  setActiveSub(null);
+                }}
+              >
+                {cat.name}
+              </button>
+              {activeCategory === cat.name && cat.subcategories?.length > 0 && (
+                <ul className="sub-list">
+                  {cat.subcategories.map(sub => (
+                    <li key={sub.name}>
+                      <button
+                        className={activeSub === sub.name ? 'sub-btn active' : 'sub-btn'}
+                        onClick={() => setActiveSub(sub.name)}
+                      >
+                        {sub.name}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           ))}
-        </ul>
-      ) : (
-        <div className="error">No categories available.</div>
-      )}
+      </div>
+
+      <div className="content">
+        <h1 className="section-title">Featured</h1>
+        {loadingHero
+          ? <div className="loading">Loading hero...</div>
+          : heroData
+            ? <Hero data={heroData} />
+            : <div className="error">No featured content.</div>
+        }
+
+        <section style={{ marginTop: '2rem' }}>
+          <h2 className="section-title">Products</h2>
+          {loadingProducts
+            ? <div className="loading">Loading products...</div>
+            : products.length > 0
+              ? <div className="product-grid">
+                  {products.map(p => (
+                    <div key={p._id} className="product-card">
+                      <img src={p.photoUrl} alt={p.name} />
+                      <h3>{p.name}</h3>
+                      <p>Ksh {p.price.toLocaleString()}</p>
+                    </div>
+                  ))}
+                </div>
+              : <div className="error">No products found.</div>
+          }
+        </section>
+      </div>
     </main>
   );
 };
