@@ -28,7 +28,6 @@ const Header = () => {
           <span className="location-icon">📍</span>
           <span>Kenya</span>
         </div>
-
         <nav className="main-nav">
           <a href="#">Vendors</a>
           <a href="#">Promotions</a>
@@ -43,7 +42,6 @@ const Header = () => {
       {/* Main Header */}
       <div className="header-main">
         <div className="logo">Electromart</div>
-
         <div className="search-container">
           <div className="search-bar">
             <input
@@ -55,7 +53,6 @@ const Header = () => {
             <button className="search-icon">🔍</button>
           </div>
         </div>
-
         <div className="header-actions">
           <button className="nav-toggle" onClick={() => setShowCategories(!showCategories)}>
             Categories
@@ -69,35 +66,33 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Dynamic Category Dropdown */}
+      {/* Improved Category Dropdown */}
       {showCategories && (
-        <div className="categories-dropdown">
-          {categories.length > 0 ? (
-            categories.map((cat) => (
-              <div key={cat._id} className="category-group">
+        <div className="mega-dropdown">
+          {categories.length ? (
+            categories.map(cat => (
+              <div key={cat._id} className="mega-col">
                 <Link
                   to={`/category/${cat.name.toLowerCase()}`}
-                  className="main-category-link"
+                  className="main-cat-title"
                 >
                   {cat.name}
                 </Link>
-                {cat.subcategories?.length > 0 && (
-                  <div className="subcategory-list">
-                    {cat.subcategories.map((sub) => (
+                <ul className="mega-sub-list">
+                  {cat.subcategories?.map(sub => (
+                    <li key={sub.name}>
                       <Link
-                        key={sub.name}
                         to={`/category/${cat.name.toLowerCase()}/${sub.name.toLowerCase()}`}
-                        className="subcategory-link"
                       >
-                        - {sub.name}
+                        {sub.name}
                       </Link>
-                    ))}
-                  </div>
-                )}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))
           ) : (
-            <p style={{ padding: '1rem', color: '#777' }}>No categories available</p>
+            <p className="empty-message">No categories available</p>
           )}
         </div>
       )}
