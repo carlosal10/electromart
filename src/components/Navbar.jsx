@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import {
+  MdAccountCircle,
+  MdFavoriteBorder,
+  MdShoppingCart,
+  MdSearch,
+  MdLocationOn,
+  MdCategory,
+  MdPhone
+} from 'react-icons/md';
 import './Navbar.css';
 
 const Header = () => {
@@ -25,7 +34,7 @@ const Header = () => {
       {/* Top Bar */}
       <div className="header-top">
         <div className="location">
-          <span className="location-icon">📍</span>
+          <MdLocationOn size={18} />
           <span>Kenya</span>
         </div>
         <nav className="main-nav">
@@ -50,23 +59,35 @@ const Header = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search"
             />
-            <button className="search-icon">🔍</button>
+            <button className="search-icon">
+              <MdSearch size={22} />
+            </button>
           </div>
         </div>
         <div className="header-actions">
           <button className="nav-toggle" onClick={() => setShowCategories(!showCategories)}>
+            <MdCategory size={18} style={{ marginRight: 6 }} />
             Categories
           </button>
-          <div className="contact">📞 777-777-7777</div>
+          <div className="contact">
+            <MdPhone size={18} style={{ marginRight: 6 }} />
+            777-777-7777
+          </div>
           <div className="action-icons">
-            <Link to="/account" className="icon-button">👤</Link>
-            <Link to="/wishlist" className="icon-button">❤️</Link>
-            <Link to="/cart" className="icon-button">🛒</Link>
+            <Link to="/account" className="icon-button" title="Account">
+              <MdAccountCircle size={22} />
+            </Link>
+            <Link to="/wishlist" className="icon-button" title="Wishlist">
+              <MdFavoriteBorder size={22} />
+            </Link>
+            <Link to="/cart" className="icon-button" title="Cart">
+              <MdShoppingCart size={22} />
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* Improved Category Dropdown */}
+      {/* Mega Dropdown */}
       {showCategories && (
         <div className="mega-dropdown">
           {categories.length ? (
