@@ -17,7 +17,6 @@ const Header = () => {
         console.error('Failed to load categories:', err);
       }
     };
-
     fetchCategories();
   }, []);
 
@@ -27,7 +26,7 @@ const Header = () => {
       <div className="header-top">
         <div className="location">
           <span className="location-icon">📍</span>
-          <span>4 Boston</span>
+          <span>Kenya</span>
         </div>
 
         <nav className="main-nav">
@@ -37,17 +36,14 @@ const Header = () => {
           <a href="#">Newest</a>
           <a href="#">Bestsellers</a>
           <a href="#">On Sale</a>
-          <a href="#">$v</a>
           <a href="#">English</a>
-          <a href="#">y</a>
         </nav>
       </div>
 
       {/* Main Header */}
       <div className="header-main">
-        <div className="logo">DroneHub</div>
+        <div className="logo">Electromart</div>
 
-        {/* Search Bar */}
         <div className="search-container">
           <div className="search-bar">
             <input
@@ -60,7 +56,6 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Actions */}
         <div className="header-actions">
           <button className="nav-toggle" onClick={() => setShowCategories(!showCategories)}>
             Categories
@@ -74,14 +69,32 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Dynamic Categories Dropdown */}
+      {/* Dynamic Category Dropdown */}
       {showCategories && (
         <div className="categories-dropdown">
           {categories.length > 0 ? (
             categories.map((cat) => (
-              <Link key={cat._id} to={`/category/${cat.name.toLowerCase()}`}>
-                {cat.name}
-              </Link>
+              <div key={cat._id} className="category-group">
+                <Link
+                  to={`/category/${cat.name.toLowerCase()}`}
+                  className="main-category-link"
+                >
+                  {cat.name}
+                </Link>
+                {cat.subcategories?.length > 0 && (
+                  <div className="subcategory-list">
+                    {cat.subcategories.map((sub) => (
+                      <Link
+                        key={sub.name}
+                        to={`/category/${cat.name.toLowerCase()}/${sub.name.toLowerCase()}`}
+                        className="subcategory-link"
+                      >
+                        - {sub.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))
           ) : (
             <p style={{ padding: '1rem', color: '#777' }}>No categories available</p>
