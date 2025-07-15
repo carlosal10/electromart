@@ -36,7 +36,7 @@ const Hero = ({ data }) => {
                 </div>
                 <h2>{banner.title}</h2>
                 {banner.subtitle && <h3>{banner.subtitle}</h3>}
-                {banner.description && <p>{banner.description}</p>}
+                {banner.description && <p style={{color: white,}} >{banner.description}</p>}
                 {banner.buttonText && banner.buttonLink && (
                   <a
                     href={banner.buttonLink}
