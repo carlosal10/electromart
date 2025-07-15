@@ -24,7 +24,7 @@ const Hero = ({ data }) => {
             <div
               className="hero-slide"
               style={{
-                backgroundImage: `url(${banner.posterUrl || '/images/fallback.jpg'})`,
+                backgroundImage: `url(${banner.imageUrl || '/images/fallback.jpg'})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }}
