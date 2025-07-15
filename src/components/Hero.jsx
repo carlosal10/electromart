@@ -21,19 +21,15 @@ const Hero = ({ data }) => {
       >
         {data.map((banner) => (
           <SwiperSlide key={banner._id || banner.title}>
-            <div className="hero-slide">
-              <div className="video-container">
-                <video
-                  src={banner.videoUrl}
-                  poster={banner.posterUrl || '/images/fallback-poster.jpg'}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="hero-video"
-                />
-                <div className="video-overlay" />
-              </div>
+            <div
+              className="hero-slide"
+              style={{
+                backgroundImage: `url(${banner.posterUrl || '/images/fallback.jpg'})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
+              <div className="image-overlay" />
 
               <div className="hero-content">
                 <div className="product-tags">
