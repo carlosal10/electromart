@@ -74,7 +74,7 @@ const Header = () => {
             777-777-7777
           </div>
           <div className="action-icons">
-            <Link to="/account" className="icon-button" title="Account">
+            <Link to="/login" className="icon-button" title="Account">
               <MdAccountCircle size={22} />
             </Link>
             <Link to="/wishlist" className="icon-button" title="Wishlist">
