@@ -1,7 +1,7 @@
 // src/components/PopularProducts.jsx
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './PopularProducts.module.css';
+import styles from './PopularProducts.css';
 
 const PopularProducts = ({ limit = 8 }) => {
   const [products, setProducts] = useState([]);
