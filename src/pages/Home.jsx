@@ -50,7 +50,7 @@ const Home = () => {
 
   return (
     <main className="home-grid">
-      <div className="sidebar">
+      <div className="sidebar-cat">
         <h3>Categories</h3>
         {loadingCats
           ? <p>Loading...</p>

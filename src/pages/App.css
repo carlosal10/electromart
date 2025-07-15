@@ -84,19 +84,19 @@ main {
     display: flex;
     flex-direction: column;
   }
-  .sidebar{
+  .sidebar-cat{
     display: none;
   }
 }
 
-.sidebar {
+.sidebar-cat {
   background: var(--light);
   padding: 1rem;
   border-radius: 8px;
   box-shadow: var(--shadow);
 }
 
-.sidebar h3 {
+.sidebar-cat h3 {
   font-size: 1.2rem;
   margin-bottom: 1rem;
 }
