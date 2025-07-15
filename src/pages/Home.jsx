@@ -89,10 +89,9 @@ const Home = () => {
           <div className="loading">Loading hero...</div>
         ) : heroData.length > 0 ? (
           <div className="hero-slider">
-            {heroData.map(banner => (
-              <Hero key={banner._id} data={banner} />
-            ))}
-          </div>
+  <Hero data={heroData} />
+</div>
+
         ) : (
           <div className="error">No featured content.</div>
         )}
