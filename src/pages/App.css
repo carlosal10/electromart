@@ -87,6 +87,7 @@ main {
 }
 
 .sidebar {
+  display: none;
   background: var(--light);
   padding: 1rem;
   border-radius: 8px;
