@@ -41,7 +41,7 @@ const Home = () => {
     const params = new URLSearchParams({ category: activeCategory });
     if (activeSub) params.set('subcategory', activeSub);
 
-    fetch(`/api/products?${params.toString()}`)
+    fetch(`https://ecommerce-electronics-0j4e.onrender.com/api/products?${params.toString()}`)
       .then(res => res.json())
       .then(setProducts)
       .catch(console.error)
