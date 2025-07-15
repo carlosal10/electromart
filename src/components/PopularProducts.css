@@ -158,5 +158,7 @@
   .cardBody {
     align-items: center;
     text-align: center;
+    overflow-x: scroll;
   }
+
 }
