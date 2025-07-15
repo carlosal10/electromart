@@ -121,7 +121,51 @@
 
 .cartBtn:hover {
   background-color: #1d4ed8;
+
 }
+.heading {
+  text-align: center;
+  font-weight: 700;
+  font-size: 28px;
+  margin-bottom: 1.5rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.viewAll {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.viewAllBtn {
+  background-color: var(--primary);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.viewAllBtn:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.skeleton {
+  background: linear-gradient(110deg, #e0e0e0 8%, #f5f5f5 18%, #e0e0e0 33%);
+  background-size: 200% 100%;
+  animation: loading 1.4s infinite linear;
+  height: 300px;
+  border-radius: 8px;
+}
+
+@keyframes loading {
+  to {
+    background-position-x: -200%;
+  }
+}
+
 
 /* Responsive: center text and simplify layout on mobile */
 @media (max-width: 640px) {
