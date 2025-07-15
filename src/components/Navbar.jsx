@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   MdAccountCircle,
@@ -16,6 +16,8 @@ const Header = () => {
   const [showCategories, setShowCategories] = useState(false);
   const [categories, setCategories] = useState([]);
 
+  const dropdownRef = useRef();
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -28,6 +30,23 @@ const Header = () => {
     };
     fetchCategories();
   }, []);
+
+  // ✅ Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowCategories(false);
+      }
+    };
+
+    if (showCategories) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showCategories]);
 
   return (
     <header className="header">
@@ -89,22 +108,17 @@ const Header = () => {
 
       {/* Mega Dropdown */}
       {showCategories && (
-        <div className="mega-dropdown">
+        <div className="mega-dropdown" ref={dropdownRef}>
           {categories.length ? (
             categories.map(cat => (
               <div key={cat._id} className="mega-col">
-                <Link
-                  to={`/category/${cat.name.toLowerCase()}`}
-                  className="main-cat-title"
-                >
+                <Link to={`/category/${cat.name.toLowerCase()}`} className="main-cat-title">
                   {cat.name}
                 </Link>
                 <ul className="mega-sub-list">
                   {cat.subcategories?.map(sub => (
                     <li key={sub.name}>
-                      <Link
-                        to={`/category/${cat.name.toLowerCase()}/${sub.name.toLowerCase()}`}
-                      >
+                      <Link to={`/category/${cat.name.toLowerCase()}/${sub.name.toLowerCase()}`}>
                         {sub.name}
                       </Link>
                     </li>
