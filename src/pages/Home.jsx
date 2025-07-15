@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Hero from '../components/Hero';
+import PopularProducts from '../components/PopularProducts'; // ✅ Added
 import './App.css';
 
 const Home = () => {
@@ -58,6 +59,9 @@ const Home = () => {
       ) : (
         <div className="error">No featured banners.</div>
       )}
+
+      {/* ✅ Popular Products Section */}
+      <PopularProducts />
 
       {/* 🛍 Layout */}
       <div className="layout">
