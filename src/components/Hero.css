@@ -103,6 +103,30 @@
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0,102,204,0.4);
 }
+.hero-wrapper {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.hero {
+  position: relative;
+  height: 600px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 0; /* Optional: remove border-radius for full edge-to-edge */
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
 
 /* Responsive styles */
 @media (max-width: 992px) {

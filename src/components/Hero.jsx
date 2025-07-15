@@ -10,7 +10,7 @@ const Hero = ({ data }) => {
   if (!Array.isArray(data) || data.length === 0) return null;
 
   return (
-    <section className="hero">
+    <section className="hero-wrapper">
       <Swiper
         modules={[Autoplay, Navigation, Pagination]}
         autoplay={{ delay: 6000, disableOnInteraction: false }}
@@ -21,16 +21,14 @@ const Hero = ({ data }) => {
       >
         {data.map((banner) => (
           <SwiperSlide key={banner._id || banner.title}>
-            <div
-              className="hero"
-              style={{
-                backgroundImage: `url(${banner.imageUrl || '/images/fallback.jpg'})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            >
+            <div className="hero">
+              <div
+                className="hero-bg"
+                style={{
+                  backgroundImage: `url(${banner.imageUrl || '/images/fallback.jpg'})`,
+                }}
+              />
               <div className="video-overlay" />
-
               <div className="hero-content">
                 <div className="product-tags">
                   <span className="product-tag">New</span>
