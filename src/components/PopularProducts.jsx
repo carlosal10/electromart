@@ -1,53 +1,58 @@
+// src/components/PopularProducts.jsx
 import React, { useEffect, useState } from 'react';
-import styles from './PopularProducts.css';
+import { Link } from 'react-router-dom';
+import styles from './PopularProducts.module.css';
 
-const PopularProducts = () => {
+const PopularProducts = ({ limit = 8 }) => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('https://ecommerce-electronics-0j4e.onrender.com/api/popularProducts')
+    fetch(`https://ecommerce-electronics-0j4e.onrender.com/api/products?popular=true&limit=${limit}`)
       .then(res => res.json())
-      .then(data => setProducts(data))
-      .catch(err => console.error('Failed to load popular products', err));
-  }, []);
+      .then(setProducts)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [limit]);
 
   return (
     <section className={styles.popularProducts}>
       <h2 className={styles.heading}>Possibly You May Be Interested</h2>
-      <div className={styles.productGrid}>
-        {products.map(product => (
-          <div key={product.code} className={styles.card}>
-            <div className={styles.imageWrapper}>
-              <img src={product.imageUrl} alt={product.name} />
-            </div>
 
-            <div className={styles.cardBody}>
+      {loading ? (
+        <div className={styles.productGrid}>
+          {[...Array(limit)].map((_, i) => (
+            <div key={i} className={`${styles.card} ${styles.skeleton}`} />
+          ))}
+        </div>
+      ) : (
+        <div className={styles.productGrid}>
+          {products.map(product => (
+            <div key={product._id} className={styles.card}>
+              <img src={product.photoUrl} alt={product.name} />
               <h3>{product.name}</h3>
-              <p className={styles.code}>Code: {product.code}</p>
-
-              <p className={styles.price}>
+              <p>Code: {product.code}</p>
+              <p>
                 Ksh {product.price.toLocaleString()}
-                {product.discount && product.originalPrice && (
+                {product.discount && (
                   <span className={styles.discount}>
-                    (was Ksh {product.originalPrice.toLocaleString()}, save {product.discount}%)
+                    &nbsp;(was {product.originalPrice.toLocaleString()}, save {product.discount}%)
                   </span>
                 )}
               </p>
-
-              <p className={styles.stock + ' ' + (product.stockStatus === 'In Stock' ? styles.inStock : styles.outOfStock)}>
-                {product.stockStatus}
-              </p>
-
-              <p className={styles.rating}>
-                ⭐ {product.rating} <span>({product.reviewsCount} reviews)</span>
-              </p>
-
-              {product.freeShipping && <span className={styles.shipping}>🚚 Free Shipping</span>}
-
-              <button className={styles.cartBtn}>Add to Cart</button>
+              <p>Status: {product.stockStatus}</p>
+              <p>Rating: ⭐ {product.rating} ({product.reviewsCount} reviews)</p>
+              {product.freeShipping && <p className={styles.shipping}>🚚 Free Shipping</p>}
+              <button>Add to Cart</button>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      )}
+
+      <div className={styles.viewAll}>
+        <Link to="/products/popular" className={styles.viewAllBtn}>
+          View All Popular
+        </Link>
       </div>
     </section>
   );
