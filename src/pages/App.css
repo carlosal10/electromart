@@ -84,10 +84,12 @@ main {
     display: flex;
     flex-direction: column;
   }
+  .sidebar{
+    display: none;
+  }
 }
 
 .sidebar {
-  display: none;
   background: var(--light);
   padding: 1rem;
   border-radius: 8px;
