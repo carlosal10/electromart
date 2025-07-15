@@ -1,54 +1,63 @@
-// src/components/Hero.js
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import './Hero.css';
 
 const Hero = ({ data }) => {
-  const videoRef = useRef(null);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(error => {
-        console.log("Autoplay prevented, showing fallback:", error);
-      });
-    }
-  }, []);
+  if (!Array.isArray(data) || data.length === 0) return null;
 
   return (
-    <section className="hero">
-      <div className="video-container">
-        <video 
-          ref={videoRef}
-          muted 
-          loop 
-          playsInline
-          className="hero-video"
-          poster="/images/drone-poster.jpg" // Fallback image
-        >
-          <source src={data.videoUrl} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <div className="video-overlay"></div>
-      </div>
-      
-      <div className="hero-content">
-        <div className="product-tags">
-          <span className="product-tag">New</span>
-          <span className="product-tag">Premium</span>
-        </div>
-        
-        <h2>{data.title}</h2>
-        <h3>{data.subtitle}</h3>
-        <p>{data.description}</p>
-        
-        <a 
-          href={data.buttonLink} 
-          className="cta-button"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {data.buttonText}
-        </a>
-      </div>
+    <section className="hero-section">
+      <Swiper
+        modules={[Autoplay, Navigation, Pagination]}
+        autoplay={{ delay: 6000, disableOnInteraction: false }}
+        navigation
+        pagination={{ clickable: true }}
+        loop
+        className="hero-swiper"
+      >
+        {data.map((banner) => (
+          <SwiperSlide key={banner._id || banner.title}>
+            <div className="hero-slide">
+              <div className="video-container">
+                <video
+                  src={banner.videoUrl}
+                  poster={banner.posterUrl || '/images/fallback-poster.jpg'}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="hero-video"
+                />
+                <div className="video-overlay" />
+              </div>
+
+              <div className="hero-content">
+                <div className="product-tags">
+                  <span className="product-tag">New</span>
+                  <span className="product-tag">Premium</span>
+                </div>
+                <h2>{banner.title}</h2>
+                {banner.subtitle && <h3>{banner.subtitle}</h3>}
+                {banner.description && <p>{banner.description}</p>}
+                {banner.buttonText && banner.buttonLink && (
+                  <a
+                    href={banner.buttonLink}
+                    className="cta-button"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {banner.buttonText}
+                  </a>
+                )}
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </section>
   );
 };

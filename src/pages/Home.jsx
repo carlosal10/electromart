@@ -3,13 +3,11 @@ import Hero from '../components/Hero';
 import './App.css';
 
 const Home = () => {
-  const [heroData, setHeroData] = useState(null);
+  const [heroData, setHeroData] = useState([]);
   const [categories, setCategories] = useState([]);
-
   const [loadingHero, setLoadingHero] = useState(true);
   const [loadingCats, setLoadingCats] = useState(true);
   const [products, setProducts] = useState([]);
-
   const [activeCategory, setActiveCategory] = useState(null);
   const [activeSub, setActiveSub] = useState(null);
   const [loadingProducts, setLoadingProducts] = useState(false);
@@ -23,7 +21,7 @@ const Home = () => {
         ]);
         const hData = await hRes.json();
         const cData = await cRes.json();
-        setHeroData(hData);
+        setHeroData(hData); // 👈 Expecting array now
         setCategories(cData);
       } catch (err) {
         console.error(err);
@@ -52,9 +50,10 @@ const Home = () => {
     <main className="home-grid">
       <div className="sidebar-cat">
         <h3>Categories</h3>
-        {loadingCats
-          ? <p>Loading...</p>
-          : categories.map(cat => (
+        {loadingCats ? (
+          <p>Loading...</p>
+        ) : (
+          categories.map(cat => (
             <div key={cat._id} className="cat-group">
               <button
                 className={activeCategory === cat.name ? 'cat-btn active' : 'cat-btn'}
@@ -80,34 +79,41 @@ const Home = () => {
                 </ul>
               )}
             </div>
-          ))}
+          ))
+        )}
       </div>
 
       <div className="content">
         <h1 className="section-title">Featured</h1>
-        {loadingHero
-          ? <div className="loading">Loading hero...</div>
-          : heroData
-            ? <Hero data={heroData} />
-            : <div className="error">No featured content.</div>
-        }
+        {loadingHero ? (
+          <div className="loading">Loading hero...</div>
+        ) : heroData.length > 0 ? (
+          <div className="hero-slider">
+            {heroData.map(banner => (
+              <Hero key={banner._id} data={banner} />
+            ))}
+          </div>
+        ) : (
+          <div className="error">No featured content.</div>
+        )}
 
         <section style={{ marginTop: '2rem' }}>
           <h2 className="section-title">Products</h2>
-          {loadingProducts
-            ? <div className="loading">Loading products...</div>
-            : products.length > 0
-              ? <div className="product-grid">
-                  {products.map(p => (
-                    <div key={p._id} className="product-card">
-                      <img src={p.photoUrl} alt={p.name} />
-                      <h3>{p.name}</h3>
-                      <p>Ksh {p.price.toLocaleString()}</p>
-                    </div>
-                  ))}
+          {loadingProducts ? (
+            <div className="loading">Loading products...</div>
+          ) : products.length > 0 ? (
+            <div className="product-grid">
+              {products.map(p => (
+                <div key={p._id} className="product-card">
+                  <img src={p.photoUrl} alt={p.name} />
+                  <h3>{p.name}</h3>
+                  <p>Ksh {p.price.toLocaleString()}</p>
                 </div>
-              : <div className="error">No products found.</div>
-          }
+              ))}
+            </div>
+          ) : (
+            <div className="error">No products found.</div>
+          )}
         </section>
       </div>
     </main>
