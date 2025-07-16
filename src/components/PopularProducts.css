@@ -150,6 +150,7 @@
 
 .productGrid {
   display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Default to 2 columns on small screens */
   gap: 1.5rem;
 }
 
