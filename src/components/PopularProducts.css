@@ -170,7 +170,8 @@
 
 @media (max-width: 400px) {
   .productGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr); /* ✅ Two columns */
+    gap: 1rem;
   }
 }
 
