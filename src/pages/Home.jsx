@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Hero from '../components/Hero';
-import PopularProducts from '../components/PopularProducts'; // ✅ Added
+import PopularProducts from '../components/PopularProducts';
 import './App.css';
+import './PopularProducts.css'; // ✅ Reusing popular styles
 
 const Home = () => {
   const [heroData, setHeroData] = useState([]);
@@ -12,6 +14,7 @@ const Home = () => {
   const [loadingHero, setLoadingHero] = useState(true);
   const [loadingCats, setLoadingCats] = useState(true);
   const [loadingProducts, setLoadingProducts] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function loadInitialData() {
@@ -49,6 +52,16 @@ const Home = () => {
       .finally(() => setLoadingProducts(false));
   }, [activeCategory, activeSub]);
 
+  const handleCardClick = (id) => {
+    navigate(`/products/${id}`);
+  };
+
+  const handleAddToCart = (product, e) => {
+    e.stopPropagation();
+    console.log('🛒 Add to cart:', product);
+    // 🔁 Replace with context/Redux logic if needed
+  };
+
   return (
     <div className="home-container">
       {/* 🔥 Hero Banner */}
@@ -60,7 +73,7 @@ const Home = () => {
         <div className="error">No featured banners.</div>
       )}
 
-      {/* ✅ Popular Products Section */}
+      {/* ✅ Popular Products */}
       <PopularProducts />
 
       {/* 🛍 Layout */}
@@ -101,7 +114,7 @@ const Home = () => {
           )}
         </aside>
 
-        {/* 🛒 Products */}
+        {/* 🛒 Products Section */}
         <section className="products-section">
           <h2 className="section-title">
             {activeSub || activeCategory || 'Our Products'}
@@ -110,12 +123,45 @@ const Home = () => {
           {loadingProducts ? (
             <div className="loading">Loading products...</div>
           ) : products.length > 0 ? (
-            <div className="product-grid">
-              {products.map((p) => (
-                <div key={p._id} className="product-card">
-                  <img src={p.photoUrl} alt={p.name} className="product-img" />
-                  <h3>{p.name}</h3>
-                  <p>Ksh {p.price.toLocaleString()}</p>
+            <div className="productGrid">
+              {products.map(product => (
+                <div
+                  key={product._id}
+                  className="card"
+                  onClick={() => handleCardClick(product._id)}
+                >
+                  <div className="imageWrapper">
+                    <img
+                      src={product.photoUrls?.[0]}
+                      alt={product.name}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="cardBody">
+                    <h3>{product.name}</h3>
+                    <p className="code">Code: {product._id.slice(-6)}</p>
+                    <p className="price">Ksh {product.price.toLocaleString()}</p>
+                    {product.discount && product.originalPrice && (
+                      <span className="discount">
+                        (was Ksh {product.originalPrice.toLocaleString()}, save {product.discount}%)
+                      </span>
+                    )}
+                    <p className={`stock ${product.inStock ? 'inStock' : 'outOfStock'}`}>
+                      {product.inStock ? 'In Stock' : 'Out of Stock'}
+                    </p>
+                    <p className="rating">
+                      ⭐ {product.rating || 4.5} ({product.reviewsCount || 12} reviews)
+                    </p>
+                    {product.freeShipping && (
+                      <p className="shipping">🚚 Free Shipping</p>
+                    )}
+                    <button
+                      className="cartBtn"
+                      onClick={(e) => handleAddToCart(product, e)}
+                    >
+                      🛒 Add to Cart
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
