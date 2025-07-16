@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { FiTruck, FiShoppingCart } from 'react-icons/fi';
 import './ProductDetail.css';
 
+const fallbackImage = '/images/fallback.jpg'; // Make sure this exists in your /public/images
 
 const ProductDetail = () => {
   const { id } = useParams();
