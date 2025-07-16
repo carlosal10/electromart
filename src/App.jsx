@@ -1,4 +1,3 @@
-// src/App.jsx
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -20,6 +19,8 @@ import AdminOrders from './pages/admin/AdminOrders';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminUsers from './pages/admin/AdminUsers';
 
+import ProductDetail from './components/ProductDetail'; // ✅ Make sure you import it
+
 import { CartProvider } from './context/CartContext';
 
 const App = () => (
@@ -35,14 +36,13 @@ const App = () => (
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/my-orders" element={<MyOrders />} />
+        <Route path="/products/:id" element={<ProductDetail />} /> {/* ✅ Correct location */}
 
-        {/* Admin Product List (outside nested admin) */}
+        {/* Admin Routes */}
         <Route path="/admin/products" element={<AdminProductList />} />
         <Route path="/admin/edit-product/:id" element={<EditProduct />} />
-
-        {/* Admin Dashboard with nested routes */}
         <Route path="/admin" element={<AdminDashboard />}>
-          <Route index element={<AdminOverview />} />           {/* Default admin tab */}
+          <Route index element={<AdminOverview />} />
           <Route path="overview" element={<AdminOverview />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="products" element={<AdminProducts />} />
