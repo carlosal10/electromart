@@ -2,6 +2,8 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Home from './pages/Home';
 import AddProduct from './pages/AddProduct';
@@ -19,14 +21,19 @@ import AdminOrders from './pages/admin/AdminOrders';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminUsers from './pages/admin/AdminUsers';
 
-import ProductDetail from './components/ProductDetail'; // ✅ Make sure you import it
+import ProductDetail from './components/ProductDetail';
+import FloatingCart from './components/FloatingCart';
+import MiniCart from './components/MiniCart';
 
-import { CartProvider } from './context/CartContext';
+import { CartProvider, useCart } from './context/CartContext';
 
-const App = () => (
-  <CartProvider>
+const AppRoutes = () => {
+  const { isMiniCartOpen, setMiniCartOpen } = useCart();
+
+  return (
     <>
       <Navbar />
+
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
@@ -36,9 +43,7 @@ const App = () => (
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/my-orders" element={<MyOrders />} />
-        <Route path="/product/:id" element={<ProductDetail />} /> {/* ✅ Correct location */}
-         
-
+        <Route path="/product/:id" element={<ProductDetail />} />
 
         {/* Admin Routes */}
         <Route path="/admin/products" element={<AdminProductList />} />
@@ -51,8 +56,22 @@ const App = () => (
           <Route path="users" element={<AdminUsers />} />
         </Route>
       </Routes>
+
       <Footer />
+
+      {/* Floating Cart + Slide Mini Cart */}
+      <FloatingCart onClick={() => setMiniCartOpen(true)} />
+      <MiniCart isOpen={isMiniCartOpen} onClose={() => setMiniCartOpen(false)} />
+
+      {/* Toasts */}
+      <ToastContainer position="top-right" autoClose={2000} />
     </>
+  );
+};
+
+const App = () => (
+  <CartProvider>
+    <AppRoutes />
   </CartProvider>
 );
 

@@ -1,12 +1,16 @@
+// src/components/PopularProducts.jsx
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiShoppingCart, FiTruck, FiStar } from 'react-icons/fi';
+import { toast } from 'react-toastify';
+import { useCart } from '../context/CartContext';
 import './PopularProducts.css';
 
-const PopularProducts = ({ limit = 8, addToCart }) => {
+const PopularProducts = ({ limit = 8 }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     fetch(`https://ecommerce-electronics-0j4e.onrender.com/api/products?popular=true&limit=${limit}`)
@@ -20,13 +24,16 @@ const PopularProducts = ({ limit = 8, addToCart }) => {
     navigate(`/product/${id}`);
   };
 
-  const handleAddToCart = (product) => {
-    navigate(`//${id}`);
-    if (addToCart) {
-      addToCart(product);
-    } else {
-      console.log('🛒 Add to cart:', product);
+  const handleAddToCart = (e, product) => {
+    e.stopPropagation();
+
+    if (!product.inStock) {
+      toast.warn('Sorry, this product is out of stock.');
+      return;
     }
+
+    addToCart(product);
+    toast.success(`${product.name} added to cart!`);
   };
 
   return (
@@ -42,13 +49,14 @@ const PopularProducts = ({ limit = 8, addToCart }) => {
               <div
                 key={product._id}
                 className={`card ${!product.inStock ? 'disabled' : ''}`}
-                onClick={() => product.inStock && handleCardClick(product._id)}
+                onClick={() => handleCardClick(product._id)}
               >
                 <div className="imageWrapper">
                   <img
                     src={product.photoUrls?.[0]}
                     alt={product.name}
                     loading="lazy"
+                    onError={(e) => { e.target.src = '/images/fallback.jpg'; }}
                   />
                 </div>
 
@@ -65,10 +73,8 @@ const PopularProducts = ({ limit = 8, addToCart }) => {
                     )}
                   </p>
 
-                  {product.discount && product.originalPrice && (
-                    <span className="discount">
-                      Save {product.discount}%
-                    </span>
+                  {product.discount && (
+                    <span className="discount">Save {product.discount}%</span>
                   )}
 
                   <p className={`stock ${product.inStock ? 'inStock' : 'outOfStock'}`}>
@@ -88,10 +94,7 @@ const PopularProducts = ({ limit = 8, addToCart }) => {
                   <button
                     className="cartBtn"
                     disabled={!product.inStock}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAddToCart(product);
-                    }}
+                    onClick={(e) => handleAddToCart(e, product)}
                   >
                     <FiShoppingCart style={{ marginRight: '8px' }} />
                     Add to Cart
@@ -102,7 +105,7 @@ const PopularProducts = ({ limit = 8, addToCart }) => {
       </div>
 
       <div className="viewAll">
-        <Link to="/product/popular" className="viewAllBtn">
+        <Link to="/products/popular" className="viewAllBtn">
           View All Popular
         </Link>
       </div>

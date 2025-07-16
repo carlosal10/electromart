@@ -1,4 +1,3 @@
-// context/CartContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -7,8 +6,12 @@ export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => {
-    const saved = localStorage.getItem('cart');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
   });
 
   const [orderId, setOrderId] = useState(() => {
@@ -20,34 +23,48 @@ export const CartProvider = ({ children }) => {
     return newId;
   });
 
+  const [isMiniCartOpen, setMiniCartOpen] = useState(false);
+  const [autoCloseMiniCart, setAutoCloseMiniCart] = useState(true);
+
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (product) => {
-    setCart((prev) => {
-      const exists = prev.find((item) => item._id === product._id);
+  // Auto-close mini cart after delay
+  useEffect(() => {
+    if (isMiniCartOpen && autoCloseMiniCart) {
+      const timer = setTimeout(() => setMiniCartOpen(false), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [isMiniCartOpen, autoCloseMiniCart]);
+
+  const addToCart = (product, qty = 1) => {
+    setCart(prev => {
+      const exists = prev.find(item => item._id === product._id);
       if (exists) {
-        return prev.map((item) =>
+        return prev.map(item =>
           item._id === product._id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + qty }
             : item
         );
       }
-      return [...prev, { ...product, quantity: 1 }];
+      return [...prev, { ...product, quantity: qty }];
     });
+
+    // Open mini cart with animation
+    setMiniCartOpen(true);
   };
 
   const updateQuantity = (id, quantity) => {
-    setCart((prev) =>
-      prev.map((item) =>
+    setCart(prev =>
+      prev.map(item =>
         item._id === id ? { ...item, quantity: Math.max(1, quantity) } : item
       )
     );
   };
 
   const removeFromCart = (id) => {
-    setCart((prev) => prev.filter((item) => item._id !== id));
+    setCart(prev => prev.filter(item => item._id !== id));
   };
 
   const clearCart = () => {
@@ -71,12 +88,16 @@ export const CartProvider = ({ children }) => {
         clearCart,
         totalItems,
         totalCost,
-        orderId
+        orderId,
+        isMiniCartOpen,
+        setMiniCartOpen,
+        autoCloseMiniCart,
+        setAutoCloseMiniCart
       }}
     >
       {children}
     </CartContext.Provider>
   );
 };
-export { CartContext };
 
+export { CartContext };

@@ -1,0 +1,33 @@
+.floating-cart {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--primary, #0066cc);
+  color: white;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  z-index: 9998;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.floating-cart:hover {
+  background: var(--primary-dark, #004a99);
+}
+
+.floating-cart .count-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ff4136;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
