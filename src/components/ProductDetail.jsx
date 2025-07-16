@@ -3,37 +3,63 @@ import { useParams, Link } from 'react-router-dom';
 import { FiTruck, FiShoppingCart } from 'react-icons/fi';
 import './ProductDetail.css';
 
+
 const ProductDetail = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    fetch(`https://ecommerce-electronics-0j4e.onrender.com/api/products/${id}`)
-      .then(res => res.json())
-      .then(setProduct)
-      .catch(console.error);
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`https://ecommerce-electronics-0j4e.onrender.com/api/products/${id}`);
+        if (!res.ok) throw new Error(`Product not found`);
+        const data = await res.json();
+        setProduct(data);
+        setError('');
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    fetch('https://ecommerce-electronics-0j4e.onrender.com/api/products?limit=6')
-      .then(res => res.json())
-      .then(setSuggestions)
-      .catch(console.error);
+    const fetchSuggestions = async () => {
+      try {
+        const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/products?limit=6');
+        const data = await res.json();
+        setSuggestions(data);
+      } catch {
+        setSuggestions([]);
+      }
+    };
+
+    fetchProduct();
+    fetchSuggestions();
   }, [id]);
 
   const handleAddToCart = () => {
-    // This would be replaced with Redux/Context logic
-    console.log('🛒 Adding to cart:', { id, selectedColor, selectedSize });
+    console.log('🛒 Add to cart', { id, selectedColor, selectedSize });
+    // 🔁 Connect to context/Redux here if needed
   };
 
-  if (!product) return <p className="loading">Loading product...</p>;
+  if (loading) return <p className="loading">Loading product...</p>;
+  if (error) return <p className="error">{error}</p>;
+  if (!product) return <p className="error">Product not found.</p>;
 
   return (
     <div className="product-detail-container">
       <div className="product-detail-main">
         <div className="product-image">
-          <img src={product.photoUrls?.[0]} alt={product.name} />
+          <img
+            src={product.photoUrls?.[0] || fallbackImage}
+            alt={product.name}
+            onError={(e) => { e.target.src = fallbackImage; }}
+          />
         </div>
 
         <div className="product-info">
@@ -42,11 +68,14 @@ const ProductDetail = () => {
 
           {product.originalPrice && product.discount && (
             <p className="discount">
-              Was Ksh {product.originalPrice.toLocaleString()} - Save {product.discount}%
+              Was Ksh {product.originalPrice.toLocaleString()} – Save {product.discount}%
             </p>
           )}
 
-          <p className="stock">{product.inStock ? 'In Stock' : 'Out of Stock'}</p>
+          <p className={`stock ${product.inStock ? 'in' : 'out'}`}>
+            {product.inStock ? 'In Stock' : 'Out of Stock'}
+          </p>
+
           <p className="description">{product.description}</p>
 
           {product.colors?.length > 0 && (
@@ -88,9 +117,13 @@ const ProductDetail = () => {
       <div className="product-suggestions">
         <h3>Other Products You May Like</h3>
         <div className="suggestion-grid">
-          {suggestions.map(s => (
+          {suggestions.map((s) => (
             <Link to={`/products/${s._id}`} key={s._id} className="suggestion-card">
-              <img src={s.photoUrls?.[0]} alt={s.name} />
+              <img
+                src={s.photoUrls?.[0] || fallbackImage}
+                alt={s.name}
+                onError={(e) => { e.target.src = fallbackImage; }}
+              />
               <h4>{s.name}</h4>
               <p>Ksh {s.price.toLocaleString()}</p>
             </Link>
