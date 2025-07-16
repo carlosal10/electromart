@@ -12,7 +12,25 @@
   color: #222;
 }
 
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
 
+@media (min-width: 768px) {
+  .productGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .productGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Card styles */
 .card {
   background: white;
   border-radius: 12px;
@@ -27,27 +45,34 @@
   transform: translateY(-4px);
 }
 
+.card.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Image */
 .imageWrapper {
   padding: 0.5rem;
   background: #fff;
+  text-align: center;
 }
-
 
 .imageWrapper img {
   width: 100%;
-  height: auto;
   max-height: 160px;
   object-fit: contain;
   display: block;
   margin: 0 auto;
 }
 
-
+/* Card body */
 .cardBody {
-  padding: 1rem 1.2rem 1.5rem;
+  padding: 0.75rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  text-align: center;
 }
 
 .cardBody h3 {
@@ -65,6 +90,13 @@
   font-size: 1.05rem;
   font-weight: bold;
   color: #1e293b;
+}
+
+.original {
+  margin-left: 0.5rem;
+  color: #888;
+  font-size: 0.9rem;
+  text-decoration: line-through;
 }
 
 .discount {
@@ -97,15 +129,16 @@
   font-weight: 500;
 }
 
+/* Cart button */
 .cartBtn {
-  margin-top: 1rem;
-  padding: 0.75rem 1.2rem;
+  margin-top: 0.5rem;
+  padding: 0.6rem 1rem;
   background-color: #2563eb;
   color: white;
   border: none;
   border-radius: 30px;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: background 0.2s ease;
 }
@@ -114,6 +147,7 @@
   background-color: #1d4ed8;
 }
 
+/* View All button */
 .viewAll {
   display: flex;
   justify-content: center;
@@ -148,76 +182,4 @@
   to {
     background-position-x: -200%;
   }
-}
-
-.productGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Default to 2 columns on small screens */
-  gap: 1.5rem;
-}
-
-/* Default: 4 columns on wide screens */
-@media (min-width: 1025px) {
-  .productGrid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* Medium: 3 columns on tablets */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .productGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-.cardBody {
-    padding: 0.75rem;
-  }
-
-  .cartBtn {
-    font-size: 0.85rem;
-    padding: 0.6rem 1rem;
-  }
-}
-
-/* Small: 2 columns on mobile and smaller */
-@media (max-width: 767px) {
-  .productGrid {
-    grid-template-columns: repeat(2, 1fr);
-
-  }
-.cardBody {
-    padding: 0.75rem;
-  }
-
-  .cartBtn {
-    font-size: 0.85rem;
-    padding: 0.6rem 1rem;
-  }
-}
-
-/* XS fallback: still 2 columns for ultra-small like 320px */
-@media (max-width: 400px) {
-  .productGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-  .cardBody {
-    padding: 0.75rem;
-  }
-
-  .cartBtn {
-    font-size: 0.85rem;
-    padding: 0.6rem 1rem;
-  }
-}
-
-
-.original {
-  margin-left: 0.5rem;
-  color: #888;
-  font-size: 0.9rem;
-}
-.card.disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-  pointer-events: none;
 }
