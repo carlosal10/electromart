@@ -1,7 +1,6 @@
-// src/components/ProductDetail.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { FiTruck, FiShoppingCart, FiHeart } from 'react-icons/fi';
+import { FiTruck, FiShoppingCart, FiHeart, FiX } from 'react-icons/fi';
 import './ProductDetail.css';
 
 const fallbackImage = '/images/fallback.jpg';
@@ -13,6 +12,7 @@ const ProductDetail = () => {
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [mainImage, setMainImage] = useState('');
+  const [zoomed, setZoomed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -59,6 +59,18 @@ const ProductDetail = () => {
 
   return (
     <div className="product-detail-container">
+      {/* 🔍 Image Zoom Overlay */}
+      {zoomed && (
+        <div className="zoom-overlay" onClick={() => setZoomed(false)}>
+          <div className="zoom-content" onClick={(e) => e.stopPropagation()}>
+            <button className="zoom-close" onClick={() => setZoomed(false)}>
+              <FiX size={24} />
+            </button>
+            <img src={mainImage} alt="Zoom" className="zoomed-image" />
+          </div>
+        </div>
+      )}
+
       <div className="product-detail-main">
         <div className="product-image-section">
           <div className="main-image-wrapper">
@@ -67,7 +79,7 @@ const ProductDetail = () => {
               alt={product.name}
               className="main-image"
               onError={(e) => (e.target.src = fallbackImage)}
-              onClick={() => window.open(mainImage, '_blank')}
+              onClick={() => setZoomed(true)}
             />
             <button className="wishlist-btn" title="Add to wishlist">
               <FiHeart size={20} />
