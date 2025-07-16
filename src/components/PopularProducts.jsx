@@ -21,6 +21,7 @@ const PopularProducts = ({ limit = 8, addToCart }) => {
   };
 
   const handleAddToCart = (product) => {
+    navigate(`//${id}`);
     if (addToCart) {
       addToCart(product);
     } else {
@@ -101,7 +102,7 @@ const PopularProducts = ({ limit = 8, addToCart }) => {
       </div>
 
       <div className="viewAll">
-        <Link to="/products" className="viewAllBtn">
+        <Link to="/product/popular" className="viewAllBtn">
           View All Popular
         </Link>
       </div>
