@@ -12,11 +12,6 @@
   color: #222;
 }
 
-.productGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 2rem;
-}
 
 .card {
   background: white;
@@ -153,26 +148,39 @@
   }
 }
 
-/* ✅ Force 2-column grid on small phones */
-@media (max-width: 640px) {
+.productGrid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* Default: 4 columns on wide screens */
+@media (min-width: 1025px) {
+  .productGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Medium: 3 columns on tablets */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .productGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Small: 2 columns on mobile and smaller */
+@media (max-width: 767px) {
+  .productGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* XS fallback: still 2 columns for ultra-small like 320px */
+@media (max-width: 400px) {
   .productGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
-
-  .cardBody {
-    align-items: center;
-    text-align: center;
-  }
 }
-
-/* ✅ Optional: 1-column fallback for very narrow screens */
-@media (max-width: 360px) {
-  .productGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
 
 
 .original {
