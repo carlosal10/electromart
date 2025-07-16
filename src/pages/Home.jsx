@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FiShoppingCart } from 'react-icons/fi';
 import Hero from '../components/Hero';
 import PopularProducts from '../components/PopularProducts';
 import './App.css';
