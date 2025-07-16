@@ -55,11 +55,17 @@ const Home = () => {
     navigate(`/products/${id}`);
   };
 
-  const handleAddToCart = (product, e) => {
-    e.stopPropagation();
-    console.log('🛒 Add to cart:', product);
-    // 🔁 Replace with context/Redux logic if needed
-  };
+   const handleAddToCart = (e, product) => {
+      e.stopPropagation();
+  
+      if (!product.inStock) {
+        toast.warn('Sorry, this product is out of stock.');
+        return;
+      }
+  
+      addToCart(product);
+      toast.success(`${product.name} added to cart!`);
+    };
 
   return (
     <div className="home-container">
@@ -155,11 +161,13 @@ const Home = () => {
                       <p className="shipping">🚚 Free Shipping</p>
                     )}
                     <button
-                      className="cartBtn"
-                      onClick={(e) => handleAddToCart(product, e)}
-                    >
-                      🛒 Add to Cart
-                    </button>
+                        className="cartBtn"
+                        disabled={!product.inStock}
+                        onClick={(e) => handleAddToCart(e, product)}
+                      >
+                        <FiShoppingCart style={{ marginRight: '8px' }} />
+                        Add to Cart
+                  </button>
                   </div>
                 </div>
               ))}
