@@ -90,7 +90,7 @@ const Header = () => {
           </button>
           <div className="contact">
             <MdPhone size={18} style={{ marginRight: 6 }} />
-            777-777-7777
+            077-777-7777
           </div>
           <div className="action-icons">
             <Link to="/login" className="icon-button" title="Account">

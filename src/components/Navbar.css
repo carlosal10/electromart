@@ -23,6 +23,7 @@
   background-color: var(--dark);
   color: #fff;
   font-size: 14px;
+  background-color: darkorange;
 }
 
 .location {
@@ -38,7 +39,7 @@
 }
 
 .main-nav a {
-  color: #fff;
+  color: #000000;
   text-decoration: none;
   font-size: 13px;
   transition: opacity 0.3s ease;
@@ -48,6 +49,7 @@
 .main-nav a:hover,
 .main-nav a:focus {
   opacity: 0.8;
+  color: goldenrod;
 }
 
 .header-main {
