@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiShoppingCart } from 'react-icons/fi';
+import { toast } from 'react-toastify';
+import { useCart } from '../context/CartContext';
+
 import Hero from '../components/Hero';
 import PopularProducts from '../components/PopularProducts';
 import './App.css';
@@ -14,7 +17,9 @@ const Home = () => {
   const [loadingHero, setLoadingHero] = useState(true);
   const [loadingCats, setLoadingCats] = useState(true);
   const [loadingProducts, setLoadingProducts] = useState(false);
+
   const navigate = useNavigate();
+  const { addToCart } = useCart(); // ✅ Access cart actions
 
   useEffect(() => {
     async function loadInitialData() {
@@ -56,17 +61,17 @@ const Home = () => {
     navigate(`/products/${id}`);
   };
 
-   const handleAddToCart = (e, product) => {
-      e.stopPropagation();
-  
-      if (!product.inStock) {
-        toast.warn('Sorry, this product is out of stock.');
-        return;
-      }
-  
-      addToCart(product);
-      toast.success(`${product.name} added to cart!`);
-    };
+  const handleAddToCart = (e, product) => {
+    e.stopPropagation();
+
+    if (!product.inStock) {
+      toast.warn('Sorry, this product is out of stock.');
+      return;
+    }
+
+    addToCart(product);
+    toast.success(`${product.name} added to cart!`);
+  };
 
   return (
     <div className="home-container">
@@ -162,13 +167,13 @@ const Home = () => {
                       <p className="shipping">🚚 Free Shipping</p>
                     )}
                     <button
-                        className="cartBtn"
-                        disabled={!product.inStock}
-                        onClick={(e) => handleAddToCart(e, product)}
-                      >
-                        <FiShoppingCart style={{ marginRight: '8px' }} />
-                        Add to Cart
-                  </button>
+                      className="cartBtn"
+                      disabled={!product.inStock}
+                      onClick={(e) => handleAddToCart(e, product)}
+                    >
+                      <FiShoppingCart style={{ marginRight: '8px' }} />
+                      Add to Cart
+                    </button>
                   </div>
                 </div>
               ))}
