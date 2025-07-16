@@ -155,6 +155,11 @@
 
 /* Mobile responsiveness */
 @media (max-width: 640px) {
+   .productGrid {
+    grid-template-columns: repeat(2, 1fr); /* ✅ Two columns */
+    gap: 1rem;
+  }
+
   .cardBody {
     align-items: center;
     text-align: center;
@@ -162,6 +167,14 @@
   }
 
 }
+
+@media (max-width: 400px) {
+  .productGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 .original {
   margin-left: 0.5rem;
   color: #888;
