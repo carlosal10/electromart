@@ -23,6 +23,7 @@
 .main-image-wrapper {
   position: relative;
   text-align: center;
+  width: 90%;
 }
 
 .main-image {
