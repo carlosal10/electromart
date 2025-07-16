@@ -119,7 +119,7 @@ const ProductDetail = () => {
         <h3>Other Products You May Like</h3>
         <div className="suggestion-grid">
           {suggestions.map((s) => (
-            <Link to={`/products/${s._id}`} key={s._id} className="suggestion-card">
+            <Link to={`/product/${s._id}`} key={s._id} className="suggestion-card">
               <img
                 src={s.photoUrls?.[0] || fallbackImage}
                 alt={s.name}
