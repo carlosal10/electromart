@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FiTruck, FiShoppingCart, FiHeart, FiX } from 'react-icons/fi';
+import { toast } from 'react-toastify';
+import { useCart } from '../context/CartContext';
 import './ProductDetail.css';
 
 const fallbackImage = '/images/fallback.jpg';
@@ -15,6 +17,8 @@ const ProductDetail = () => {
   const [zoomed, setZoomed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const { addToCart } = useCart(); // ✅ access global cart context
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -47,7 +51,28 @@ const ProductDetail = () => {
   }, [id]);
 
   const handleAddToCart = () => {
-    console.log('🛒 Add to cart', { id, selectedColor, selectedSize });
+    if (!product.inStock) {
+      toast.warn('This product is out of stock.');
+      return;
+    }
+
+    if (product.colors?.length > 0 && !selectedColor) {
+      toast.error('Please select a color.');
+      return;
+    }
+
+    if (product.sizes?.length > 0 && !selectedSize) {
+      toast.error('Please select a size.');
+      return;
+    }
+
+    addToCart({
+      ...product,
+      selectedColor,
+      selectedSize,
+    });
+
+    toast.success(`${product.name} added to cart!`);
   };
 
   const handleImageClick = (url) => {

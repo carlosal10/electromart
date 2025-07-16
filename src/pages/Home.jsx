@@ -58,7 +58,7 @@ const Home = () => {
   }, [activeCategory, activeSub]);
 
   const handleCardClick = (id) => {
-    navigate(`/products/${id}`);
+    navigate(`/product/${id}`);
   };
 
   const handleAddToCart = (e, product) => {
