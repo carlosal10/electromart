@@ -101,7 +101,7 @@ const PopularProducts = ({ limit = 8, addToCart }) => {
       </div>
 
       <div className="viewAll">
-        <Link to="/products/popular" className="viewAllBtn">
+        <Link to="/products" className="viewAllBtn">
           View All Popular
         </Link>
       </div>
