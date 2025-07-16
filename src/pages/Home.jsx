@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Hero from '../components/Hero';
 import PopularProducts from '../components/PopularProducts';
 import './App.css';
-import './PopularProducts.css'; // ✅ Reusing popular styles
 
 const Home = () => {
   const [heroData, setHeroData] = useState([]);
