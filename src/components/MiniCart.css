@@ -16,7 +16,7 @@
   right: 0;
   width: 320px;
   max-width: 90vw;
-  height: calc(100vh - 70px);
+  height:fit-content;
   background: #fff;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.15);
   z-index: 9999;
@@ -73,6 +73,7 @@
 .item-info h4 {
   font-size: 1rem;
   margin: 0 0 0.25rem;
+  color: #000;
 }
 
 .item-info p {
