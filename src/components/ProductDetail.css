@@ -224,6 +224,7 @@
   object-fit: contain;
   margin-bottom: 0.8rem;
   border-radius: 6px;
+  z-index: auto;
 }
 
 .suggestion-card h4 {
@@ -240,7 +241,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 90%;
   height: 100vh;
   background: rgba(30, 30, 30, 0.85);
   display: flex;
