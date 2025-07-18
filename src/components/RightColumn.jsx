@@ -9,8 +9,13 @@ const ShowcaseRight = () => {
   const [banner, setBanner] = useState(null);
 
   useEffect(() => {
-    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/products?tag=deal&limit=3').then(res => setProducts(res.data));
-    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/hero?section=midweek').then(res => setBanner(res.data));
+    axios
+      .get('https://ecommerce-electronics-0j4e.onrender.com/api/products?tag=deal&limit=3')
+      .then(res => setProducts(res.data));
+
+    axios
+      .get('https://ecommerce-electronics-0j4e.onrender.com/api/hero?section=midweek')
+      .then(res => setBanner(res.data));
   }, []);
 
   const settings = {
@@ -24,24 +29,22 @@ const ShowcaseRight = () => {
   };
 
   return (
-    <div className="showcase-container">
-      <div className="slider-wrapper">
+    <div className="showcase-right-wrapper">
+      <div className="showcase-carousel">
         <Slider {...settings}>
-          {products.map(p => (
-            <div key={p._id} className="slider-item">
-              <DynamicProductCard product={p} />
+          {products.map(product => (
+            <div key={product._id} className="carousel-item">
+              <DynamicProductCard product={product} />
             </div>
           ))}
         </Slider>
       </div>
 
       {banner && (
-        <div className="banner">
+        <div className="showcase-banner">
           <h4 className="banner-title">{banner.title}</h4>
           <p className="banner-subtitle">{banner.subtitle}</p>
-          <button className="banner-button">
-            {banner.buttonText}
-          </button>
+          <button className="banner-button">{banner.buttonText}</button>
         </div>
       )}
     </div>

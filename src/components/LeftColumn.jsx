@@ -1,36 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DynamicProductCard from './ProductCard';
-import './LeftColumn.css'; // <-- link to styles
+import './LeftColumn.css';
 
 const ShowcaseLeft = () => {
-  const [banner, setBanner] = useState(null);
+  const [banners, setBanners] = useState([]);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/hero?section=showcase-left')
-      .then(res => setBanner(res.data));
-    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/products?limit=2')
-      .then(res => setProducts(res.data));
+    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/showcase/left')
+      .then(res => {
+        setBanners(res.data.banners);
+        setProducts(res.data.products);
+      })
+      .catch(err => console.error("Showcase left fetch failed:", err));
   }, []);
+
+  const productTop = products.find(p => p.position === 'top');
+  const productBottom = products.find(p => p.position === 'bottom');
 
   return (
     <div className="showcase-left-wrapper">
-      {banner && (
-        <div
-          className="showcase-banner"
-          style={{ backgroundImage: `url(${banner.imageUrl})` }}
-        >
+      {/* Banners */}
+      {banners.length > 0 && (
+        <div className="showcase-banner" style={{ backgroundImage: `url(${banners[0].photoUrl})` }}>
           <div className="banner-overlay">
-            <h3 className="banner-title">{banner.title}</h3>
-            <p className="banner-subtitle">{banner.subtitle}</p>
-            <button className="banner-button">{banner.buttonText}</button>
+            <h3 className="banner-title">{banners[0].title}</h3>
+            <p className="banner-subtitle">{banners[0].subtitle}</p>
+            <button className="banner-button">{banners[0].buttonText}</button>
           </div>
         </div>
       )}
-      {products.map((p) => (
-        <DynamicProductCard key={p._id} product={p} />
-      ))}
+
+      {/* Dynamic Top Product */}
+      {productTop && <DynamicProductCard key={productTop._id} product={productTop} />}
+
+      {/* Dynamic Bottom Product */}
+      {productBottom && <DynamicProductCard key={productBottom._id} product={productBottom} />}
     </div>
   );
 };
