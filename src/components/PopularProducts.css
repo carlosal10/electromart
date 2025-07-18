@@ -37,6 +37,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  min-height: 320px;
   transition: transform 0.2s ease;
   cursor: pointer;
 }
@@ -46,17 +48,19 @@
 }
 
 .popularProducts .imageWrapper {
-  padding: 0.5rem;
-  background: #fff;
+
+  flex: 0 0 50%;
+  width: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
-  width: auto;
+  align-items: center;
+  background: #f9f9f9;
+  padding: 10px;
 }
 
 .popularProducts .imageWrapper img {
-  width: 100%;
-  max-height: 160px;
+  width: auto;
+  max-height: 180px;
   object-fit: contain;
   display: block;
   margin: 0 auto;
