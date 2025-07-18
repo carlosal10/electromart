@@ -8,8 +8,8 @@ const ShowcaseRight = () => {
   const [banner, setBanner] = useState(null);
 
   useEffect(() => {
-    axios.get('/api/products?tag=deal&limit=3').then(res => setProducts(res.data));
-    axios.get('/api/banners?section=midweek').then(res => setBanner(res.data));
+    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/products?tag=deal&limit=3').then(res => setProducts(res.data));
+    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/hero?section=midweek').then(res => setBanner(res.data));
   }, []);
 
   const settings = {

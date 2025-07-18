@@ -7,8 +7,8 @@ const ShowcaseLeft = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/banners?section=showcase-left').then(res => setBanner(res.data));
-    axios.get('/api/products?limit=2').then(res => setProducts(res.data));
+    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/hero?section=showcase-left').then(res => setBanner(res.data));
+    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/products?limit=2').then(res => setProducts(res.data));
   }, []);
 
   return (

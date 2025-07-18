@@ -7,7 +7,7 @@ const ShowcaseCenter = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/products?featured=true&limit=5').then(res => setProducts(res.data));
+    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/products?featured=true&limit=5').then(res => setProducts(res.data));
   }, []);
 
   const settings = {
