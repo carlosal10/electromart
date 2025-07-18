@@ -1,29 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DynamicProductCard from './ProductCard';
+import './LeftColumn.css'; // <-- link to styles
 
 const ShowcaseLeft = () => {
   const [banner, setBanner] = useState(null);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/hero?section=showcase-left').then(res => setBanner(res.data));
-    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/products?limit=2').then(res => setProducts(res.data));
+    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/hero?section=showcase-left')
+      .then(res => setBanner(res.data));
+    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/products?limit=2')
+      .then(res => setProducts(res.data));
   }, []);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="showcase-left-wrapper">
       {banner && (
         <div
-          className="relative h-48 bg-cover bg-center rounded-xl overflow-hidden shadow"
+          className="showcase-banner"
           style={{ backgroundImage: `url(${banner.imageUrl})` }}
         >
-          <div className="absolute inset-0 bg-black/40 p-4 text-white flex flex-col justify-center">
-            <h3 className="text-lg font-bold">{banner.title}</h3>
-            <p className="text-sm">{banner.subtitle}</p>
-            <button className="mt-2 bg-white text-black text-xs px-3 py-1 rounded">
-              {banner.buttonText}
-            </button>
+          <div className="banner-overlay">
+            <h3 className="banner-title">{banner.title}</h3>
+            <p className="banner-subtitle">{banner.subtitle}</p>
+            <button className="banner-button">{banner.buttonText}</button>
           </div>
         </div>
       )}

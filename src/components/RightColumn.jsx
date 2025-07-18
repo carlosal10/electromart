@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import axios from 'axios';
 import DynamicProductCard from './ProductCard';
+import './RightColumn.css';
 
 const ShowcaseRight = () => {
   const [products, setProducts] = useState([]);
@@ -23,11 +24,11 @@ const ShowcaseRight = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="bg-white rounded-xl shadow overflow-hidden">
+    <div className="showcase-container">
+      <div className="slider-wrapper">
         <Slider {...settings}>
           {products.map(p => (
-            <div key={p._id} className="px-2">
+            <div key={p._id} className="slider-item">
               <DynamicProductCard product={p} />
             </div>
           ))}
@@ -35,10 +36,10 @@ const ShowcaseRight = () => {
       </div>
 
       {banner && (
-        <div className="relative h-40 bg-gradient-to-r from-indigo-600 to-purple-500 text-white p-4 rounded-xl shadow-md">
-          <h4 className="text-lg font-semibold">{banner.title}</h4>
-          <p className="text-sm">{banner.subtitle}</p>
-          <button className="mt-2 bg-white text-indigo-700 px-3 py-1 text-xs rounded">
+        <div className="banner">
+          <h4 className="banner-title">{banner.title}</h4>
+          <p className="banner-subtitle">{banner.subtitle}</p>
+          <button className="banner-button">
             {banner.buttonText}
           </button>
         </div>

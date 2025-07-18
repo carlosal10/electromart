@@ -4,6 +4,7 @@ import axios from 'axios';
 import DynamicProductCard from './ProductCard';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "./CenterCarousel.css"
 
 const ShowcaseCenter = () => {
   const [products, setProducts] = useState([]);
@@ -23,15 +24,25 @@ const ShowcaseCenter = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow overflow-hidden">
-      <Slider {...settings}>
-        {products.map(p => (
-          <div key={p._id} className="px-2">
-            <DynamicProductCard product={p} />
-          </div>
-        ))}
-      </Slider>
+    <div className="showcase-wrapper">
+  <div className="showcase-carousel">
+    <Slider {...settings}>
+      {products.map(p => (
+        <div key={p._id}>
+          <DynamicProductCard product={p} />
+        </div>
+      ))}
+    </Slider>
+  </div>
+
+  {banner && (
+    <div className="banner-container">
+      <h4 className="banner-title">{banner.title}</h4>
+      <p className="banner-subtitle">{banner.subtitle}</p>
+      <button className="banner-button">{banner.buttonText}</button>
     </div>
+  )}
+</div>
   );
 };
 

@@ -1,0 +1,73 @@
+.showcase-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.showcase-carousel {
+  background-color: #ffffff;
+  border-radius: 1rem; /* rounded-xl */
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  padding: 0.5rem 0;
+}
+
+.slick-slide > div {
+  padding: 0 0.5rem; /* gap between cards */
+}
+
+.banner-container {
+  position: relative;
+  height: 10rem;
+  background: linear-gradient(to right, #4f46e5, #8b5cf6);
+  color: #ffffff;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.07);
+}
+
+.banner-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.banner-subtitle {
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.banner-button {
+  background-color: #ffffff;
+  color: #4f46e5;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.banner-button:hover {
+  background-color: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  .banner-container {
+    padding: 0.75rem;
+    height: auto;
+  }
+
+  .banner-title {
+    font-size: 1rem;
+  }
+
+  .banner-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .banner-button {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
