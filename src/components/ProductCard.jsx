@@ -13,7 +13,7 @@ const DynamicProductCard = ({ product }) => {
       className="relative group bg-white rounded-md shadow-sm border cursor-pointer overflow-hidden hover:shadow-lg transition"
     >
       <img
-        src={product.imageUrls?.[0]}
+        src={product.photoUrls?.[0]}
         alt={product.name}
         className="w-full h-40 object-cover"
       />
