@@ -182,7 +182,9 @@ const Home = () => {
             <div className="error">No products found in this category.</div>
           )}
         </section>
+        
       </div>
+      <ThreeColumnShowcase />
     </div>
   );
 };
