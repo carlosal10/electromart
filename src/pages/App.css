@@ -93,6 +93,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 100%;
+  min-height: 320px;
 }
 
 .card:hover {
@@ -101,21 +103,22 @@
 }
 
 .imageWrapper {
-  width: 100%;
-  height: 250px;
-  background: #f9fafb;
+  flex: 1 1 50%;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #fff;
+  height: 180px; /* adjust as needed for balance */
 }
 
 .imageWrapper img {
-  max-width: 100%;
   max-height: 100%;
+  max-width: 90%;
   object-fit: contain;
-  padding: 0.5rem;
-  z-index: 1001;
+  display: block;
 }
+
 
 .cardBody {
   padding: 0.2rem;
