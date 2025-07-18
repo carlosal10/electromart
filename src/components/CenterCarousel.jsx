@@ -35,13 +35,6 @@ const ShowcaseCenter = () => {
     </Slider>
   </div>
 
-  {banner && (
-    <div className="banner-container">
-      <h4 className="banner-title">{banner.title}</h4>
-      <p className="banner-subtitle">{banner.subtitle}</p>
-      <button className="banner-button">{banner.buttonText}</button>
-    </div>
-  )}
 </div>
   );
 };
