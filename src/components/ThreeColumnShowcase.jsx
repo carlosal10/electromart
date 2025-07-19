@@ -1,24 +1,37 @@
 import React from 'react';
 import './ThreeColumnShowcase.css';
-import LeftColumn from './LeftColumn';
-import CenterCarousel from './CenterCarousel';
-import RightColumn from './RightColumn';
+import ProductCarousel from './ProductCarousel';
+import ProductCard from './ProductCard';
 
-const ThreeColumnShowcase = () => {
+
+const ThreeColumnShowcase = ({ leftBanners = [], rightBanners = [], leftProducts = [], rightProducts = [], centerProducts = [] }) => {
   return (
-    <section className="three-column-showcase-container">
-      <div className="three-column-grid">
-        <div className="column left">
-          <LeftColumn />
-        </div>
-        <div className="column center">
-          <CenterCarousel />
-        </div>
-        <div className="column right">
-          <RightColumn />
-        </div>
+    <div className="three-column-grid">
+      {/* LEFT COLUMN */}
+      <div className="column left-column">
+        {leftBanners.map((banner) => (
+          <Banner key={banner._id} banner={banner} />
+        ))}
+        {leftProducts.map((product) => (
+          <ProductCard key={product._id} product={product} />
+        ))}
       </div>
-    </section>
+
+      {/* CENTER COLUMN */}
+      <div className="column center-column">
+        <ProductCarousel products={centerProducts} />
+      </div>
+
+      {/* RIGHT COLUMN */}
+      <div className="column right-column">
+        {rightProducts.map((product) => (
+          <ProductCard key={product._id} product={product} />
+        ))}
+        {rightBanners.map((banner) => (
+          <Banner key={banner._id} banner={banner} />
+        ))}
+      </div>
+    </div>
   );
 };
 

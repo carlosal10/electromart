@@ -3,21 +3,16 @@ import axios from 'axios';
 import './ProductCarousel.css';
 import ProductCard from './ProductCard';
 
-const ProductCarousel = ({ title, query, autoplay }) => {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    axios.get(`https://ecommerce-electronics-0j4e.onrender.com/api/products${query}`).then(res => setProducts(res.data));
-  }, [query]);
+const ProductCarousel = ({ products }) => {
+  if (!products?.length) return null;
 
   return (
-    <div className="product-carousel">
-      <h3 className="carousel-title">{title}</h3>
-      <div className={`carousel-track ${autoplay ? 'autoplay' : ''}`}>
-        {products.map(product => (
-          <ProductCard key={product._id} data={product} />
-        ))}
-      </div>
+    <div className="carousel-container">
+      {products.map((product) => (
+        <div key={product._id} className="carousel-item">
+          <ProductCard product={product} />
+        </div>
+      ))}
     </div>
   );
 };

@@ -3,20 +3,30 @@ import { useNavigate } from 'react-router-dom';
 import { FiShoppingCart } from 'react-icons/fi';
 import './ProductCard.css';
 
-const DynamicProductCard = ({ product }) => {
+const ProductCard = ({ product }) => {
   const navigate = useNavigate();
-  if (!product || typeof product !== 'object') return null;
+
+  // Defensive check — helps avoid silent failures
+  if (!product || typeof product !== 'object') {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Invalid product passed to DynamicProductCard:', product);
+    }
+    return null;
+  }
 
   const {
     _id,
     name = 'Unnamed Product',
-    price,
+    price = 0,
     discountedPrice,
     photoUrls = [],
     freeShipping = false,
   } = product;
 
-  const imageUrl = photoUrls[0] || 'https://via.placeholder.com/300x300?text=No+Image';
+  // Safer image URL fallback
+  const imageUrl =
+    (photoUrls?.[0] && photoUrls[0].startsWith('http') ? photoUrls[0] : null) ||
+    'https://via.placeholder.com/300x300?text=No+Image';
 
   const handleCardClick = () => {
     if (_id) navigate(`/product/${_id}`);
@@ -24,22 +34,27 @@ const DynamicProductCard = ({ product }) => {
 
   const handleCartClick = (e) => {
     e.stopPropagation();
-    // dispatch(addToCart(product));
+    // Add to cart logic goes here
   };
 
   return (
     <div className="product-card group" onClick={handleCardClick}>
-      <img
-        src={imageUrl}
-        alt={name}
-        className="product-image"
-      />
+      <img src={imageUrl} alt={name} className="product-image" />
 
       <div className="product-info">
         <h4 className="product-title">{name}</h4>
+
         <p className="product-price">
-          ${discountedPrice || price || '0.00'}
+          {discountedPrice ? (
+            <>
+              <span className="discounted-price">${discountedPrice}</span>{' '}
+              <span className="original-price">${price}</span>
+            </>
+          ) : (
+            <span className="regular-price">${price}</span>
+          )}
         </p>
+
         <div className="product-rating">★★★★☆</div>
 
         {freeShipping && (
@@ -54,4 +69,4 @@ const DynamicProductCard = ({ product }) => {
   );
 };
 
-export default DynamicProductCard;
+export default ProductCard;
