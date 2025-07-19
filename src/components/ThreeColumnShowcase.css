@@ -1,11 +1,18 @@
-.three-column-grid {
-  display: flex;
-  gap: 1rem;
+.three-column-wrapper {
   width: 100%;
   padding: 1rem;
-  box-sizing: border-box;
+  background: #f9f9f9;
 }
 
+.three-column-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  max-width: 1400px;
+  margin: auto;
+}
+
+/* Each column takes 1/3 */
 .column {
   flex: 1;
   display: flex;
@@ -13,26 +20,18 @@
   gap: 1rem;
 }
 
-/* Optional: emphasize center carousel slightly */
-.center-column {
-  flex: 1.5;
+.left-col,
+.center-col,
+.right-col {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.left-column,
-.right-column {
-  flex: 1;
-}
-
-@media (max-width: 1024px) {
-  .three-column-grid {
+/* Mobile stacking */
+@media (max-width: 768px) {
+  .three-column-container {
     flex-direction: column;
-  }
-
-  .column {
-    width: 100%;
-  }
-
-  .center-column {
-    order: -1; /* Optional: bring carousel to top on mobile */
   }
 }
