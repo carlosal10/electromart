@@ -2,24 +2,35 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ProductCard from './ProductCard';
 import Banner from './Banner';
-import "./RightColumn.css";
+import './RightColumn.css';
+
 const RightColumn = () => {
-  const [data, setData] = useState({ banners: [], products: [] });
+  const [products, setProducts] = useState([]);
+  const [banners, setBanners] = useState([]);
 
   useEffect(() => {
-    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/showcase/right').then(res => {
-    console.log('Right Column Data:', res.data);
-    setData(res.data);
-  });
-}, []);
+    const fetchRightColumnData = async () => {
+      try {
+        const response = await axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/showcase/right');
+        console.log('Right Column Data:', response.data);
+
+        setProducts(response.data.products || []);
+        setBanners(response.data.banners || []);
+      } catch (error) {
+        console.error('Error fetching right column data:', error);
+      }
+    };
+
+    fetchRightColumnData();
+  }, []);
 
   return (
     <>
-      {data.products.map((product) => (
-        <ProductCard key={product._id} data={product} />
+      {products.map((product) => (
+        <ProductCard key={product._id} product={product} />
       ))}
-      {data.banners.slice(0, 3).map((banner, i) => (
-        <Banner key={i} data={banner} />
+      {banners.slice(0, 3).map((banner, i) => (
+        <Banner key={banner._id || i} banner={banner} />
       ))}
     </>
   );
