@@ -2,6 +2,7 @@ import React from 'react';
 import './ThreeColumnShowcase.css';
 import ProductCarousel from './ProductCarousel';
 import ProductCard from './ProductCard';
+import Banner from './Banner'
 
 
 const ThreeColumnShowcase = ({ leftBanners = [], rightBanners = [], leftProducts = [], rightProducts = [], centerProducts = [] }) => {
