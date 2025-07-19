@@ -1,26 +1,60 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ProductCard from './ProductCard';
-import Banner from './Banner';
-import "./LeftColumn.css";
+import './LeftColumn.css';
+
 const LeftColumn = () => {
-  const [data, setData] = useState({ banners: [], products: [] });
+  const [leftProducts, setLeftProducts] = useState([]);
+  const [banners, setBanners] = useState([]);
 
   useEffect(() => {
-    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/showcase/left').then(res => {
-    console.log('Left Column Data:', res.data);
-    setData(res.data);
-  });
-}, []);
+    const fetchLeftProducts = async () => {
+      try {
+        const res = await axios.get('/api/products?limit=2');
+        setLeftProducts(res.data.slice(0, 2));
+      } catch (err) {
+        console.error('Error fetching left column products:', err);
+      }
+    };
+
+    const fetchBanners = async () => {
+      try {
+        const res = await axios.get('/api/banners?position=left');
+        setBanners(res.data);
+      } catch (err) {
+        console.error('Error fetching left column banners:', err);
+      }
+    };
+
+    fetchLeftProducts();
+    fetchBanners();
+  }, []);
+
   return (
-    <>
-      {data.banners.slice(0, 3).map((banner, i) => (
-        <Banner key={i} data={banner} />
-      ))}
-      {data.products.map((product) => (
-        <ProductCard key={product._id} data={product} />
-      ))}
-    </>
+    <div className="left-column">
+      <div className="top-banners">
+        {banners.slice(0, 3).map(banner => (
+          <img
+            key={banner._id}
+            src={banner.posterUrl}
+            alt={banner.title}
+            className="banner-image"
+          />
+        ))}
+      </div>
+
+      {leftProducts[0] && (
+        <div className="middle-product">
+          <ProductCard product={leftProducts[0]} />
+        </div>
+      )}
+
+      {leftProducts[1] && (
+        <div className="bottom-product">
+          <ProductCard product={leftProducts[1]} />
+        </div>
+      )}
+    </div>
   );
 };
 
