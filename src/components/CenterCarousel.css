@@ -1,49 +1,120 @@
-.carousel-wrapper {
+.center-carousel-container {
   width: 100%;
-  padding: 0 10px;
-  box-sizing: border-box;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+.center-carousel-container::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-track {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #fdfdfd;
+  gap: 16px;
+  padding: 12px 8px;
+  scroll-snap-type: x mandatory;
 }
 
-/* Customize inner carousel */
-.carousel-wrapper .product-carousel {
+.product-card {
+  flex: 0 0 auto;
+  width: 220px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  scroll-snap-align: start;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+}
+
+.img-wrapper {
   width: 100%;
-  max-width: 100%;
+  height: 160px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   overflow: hidden;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  background: white;
 }
 
-/* Override carousel controls if needed */
-.carousel-wrapper .slick-slider {
+.img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info {
+  padding: 10px;
   position: relative;
 }
 
-.carousel-wrapper .slick-slide > div {
-  padding: 0 8px;
+.info h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 4px;
 }
 
-.carousel-wrapper .product-card {
-  border-radius: 8px;
-  overflow: hidden;
-  transition: transform 0.3s ease-in-out;
+.info .code {
+  font-size: 0.75rem;
+  color: #888;
 }
 
-.carousel-wrapper .product-card:hover {
-  transform: scale(1.02);
+.info .price {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1a1a1a;
 }
 
-/* Responsive tweaks */
-@media screen and (max-width: 768px) {
-  .carousel-wrapper {
-    padding: 0 5px;
+.info .discount {
+  font-size: 0.75rem;
+  color: #e63946;
+}
+
+.info .stock {
+  font-size: 0.75rem;
+  margin-top: 6px;
+}
+
+.info .stock.in {
+  color: green;
+}
+.info .stock.out {
+  color: red;
+}
+
+.cart-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.cart-btn:hover {
+  background: #333;
+}
+
+@media (max-width: 768px) {
+  .product-card {
+    width: 180px;
   }
 
-  .carousel-wrapper .product-card {
-    margin: 0 auto;
+  .img-wrapper {
+    height: 140px;
+  }
+
+  .info h4 {
+    font-size: 0.85rem;
+  }
+
+  .info .price {
+    font-size: 0.85rem;
   }
 }
