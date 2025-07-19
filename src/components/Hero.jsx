@@ -9,10 +9,7 @@ import './Hero.css';
 const Hero = ({ data }) => {
   if (!Array.isArray(data) || data.length === 0) return null;
 
-  // ✅ Filter banners intended for hero section only
-  const heroBanners = data.filter(banner =>
-    banner.section === 'home' || banner.section === 'main'
-  );
+  const heroBanners = data.filter(banner => banner.type === 'hero');
 
   if (heroBanners.length === 0) return null;
 
