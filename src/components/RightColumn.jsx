@@ -9,31 +9,28 @@ const ShowcaseRight = () => {
   const [banner, setBanner] = useState(null);
 
   useEffect(() => {
-    // Fetch products tagged "deal"
+    // Fetch seasonal products
     axios
-      .get('https://ecommerce-electronics-0j4e.onrender.com/api/products?tag=deal&limit=3')
+      .get('https://ecommerce-electronics-0j4e.onrender.com/api/products?type=seasonal&limit=3')
       .then(res => {
-        setProducts(res.data);
+        setProducts(res.data || []);
       })
       .catch(err => {
-        console.error('Error fetching products:', err);
+        console.error('Error fetching seasonal products:', err);
       });
 
-    // Fetch banner for 'midweek' section
+    // Fetch seasonal banners
     axios
-      .get('https://ecommerce-electronics-0j4e.onrender.com/api/hero?section=midweek')
+      .get('https://ecommerce-electronics-0j4e.onrender.com/api/hero')
       .then(res => {
-        // Assuming it's an array, pick the first item
-        if (Array.isArray(res.data) && res.data.length > 0) {
-          setBanner(res.data[0]);
-        } else if (res.data && typeof res.data === 'object') {
-          setBanner(res.data); // fallback if it's a single object
-        } else {
-          console.warn('Unexpected banner data format:', res.data);
+        let banners = Array.isArray(res.data) ? res.data : [res.data];
+        const seasonalBanner = banners.find(item => item.type === 'seasonal');
+        if (seasonalBanner) {
+          setBanner(seasonalBanner);
         }
       })
       .catch(err => {
-        console.error('Error fetching banner:', err);
+        console.error('Error fetching hero banners:', err);
       });
   }, []);
 
@@ -49,21 +46,30 @@ const ShowcaseRight = () => {
 
   return (
     <div className="showcase-right-wrapper">
-      <div className="showcase-carousel">
-        <Slider {...settings}>
-          {products.map(product => (
-            <div key={product._id} className="carousel-item">
-              <DynamicProductCard product={product} />
-            </div>
-          ))}
-        </Slider>
-      </div>
+      {/* Seasonal Product Carousel */}
+      {products.length > 0 && (
+        <div className="showcase-carousel">
+          <Slider {...settings}>
+            {products.map(product => (
+              <div key={product._id} className="carousel-item">
+                <DynamicProductCard product={product} />
+              </div>
+            ))}
+          </Slider>
+        </div>
+      )}
 
+      {/* Seasonal Banner */}
       {banner && banner.title && (
         <div className="showcase-banner">
           <h4 className="banner-title">{banner.title}</h4>
           <p className="banner-subtitle">{banner.subtitle}</p>
-          <button className="banner-button">{banner.buttonText}</button>
+          <button
+            className="banner-button"
+            onClick={() => window.location.href = banner.buttonLink}
+          >
+            {banner.buttonText}
+          </button>
         </div>
       )}
     </div>
