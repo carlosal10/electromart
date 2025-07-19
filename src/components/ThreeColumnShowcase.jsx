@@ -16,7 +16,7 @@ const ThreeColumnShowcase = () => {
     const fetchData = async () => {
       try {
         const [bannersRes, productsRes] = await Promise.all([
-          fetch('https://ecommerce-electronics-0j4e.onrender.com/api/banners'),
+          fetch('https://ecommerce-electronics-0j4e.onrender.com/api/hero'),
           fetch('https://ecommerce-electronics-0j4e.onrender.com/api/products'),
         ]);
 
