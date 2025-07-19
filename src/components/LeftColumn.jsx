@@ -7,9 +7,11 @@ const LeftColumn = () => {
   const [data, setData] = useState({ banners: [], products: [] });
 
   useEffect(() => {
-    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/showcase/left').then(res => setData(res.data));
-  }, []);
-
+    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/showcase/left').then(res => {
+    console.log('Left Column Data:', res.data);
+    setData(res.data);
+  });
+}, []);
   return (
     <>
       {data.banners.slice(0, 3).map((banner, i) => (
