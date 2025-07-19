@@ -9,6 +9,13 @@ import './Hero.css';
 const Hero = ({ data }) => {
   if (!Array.isArray(data) || data.length === 0) return null;
 
+  // ✅ Filter banners intended for hero section only
+  const heroBanners = data.filter(banner =>
+    banner.section === 'home' || banner.section === 'main'
+  );
+
+  if (heroBanners.length === 0) return null;
+
   return (
     <section className="hero-wrapper">
       <Swiper
@@ -19,7 +26,7 @@ const Hero = ({ data }) => {
         loop
         className="hero-swiper"
       >
-        {data.map((banner) => (
+        {heroBanners.map((banner) => (
           <SwiperSlide key={banner._id || banner.title}>
             <div className="hero">
               <div
