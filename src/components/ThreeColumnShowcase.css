@@ -1,27 +1,40 @@
-.three-column-showcase {
+.three-column-showcase-container {
   width: 100%;
-  max-width: 1440px;
+  padding: 0;
   margin: 0 auto;
+  background: #f9f9f9;
 }
 
-.three-column-showcase h2 {
-  grid-column: 1 / -1;
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  text-align: center;
-  color: #1f2937; /* gray-800 */
+.three-column-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 10px;
+  padding: 10px;
 }
 
-@media (max-width: 768px) {
-  .three-column-showcase {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* Make center column full height and scroll if needed */
+.center {
+  overflow: hidden;
+}
+
+/* Responsive behavior */
+@media screen and (max-width: 768px) {
+  .three-column-grid {
+    grid-template-columns: 1fr;
   }
 
-  .three-column-showcase h2 {
-    font-size: 1.25rem;
+  .center {
+    order: 1;
+  }
+
+  .left, .right {
+    order: 2;
   }
 }

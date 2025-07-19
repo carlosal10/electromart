@@ -1,24 +1,22 @@
-import React from 'react'; 
+import React from 'react';
+import './ThreeColumnShowcase.css';
 import LeftColumn from './LeftColumn';
 import CenterCarousel from './CenterCarousel';
 import RightColumn from './RightColumn';
-import './ThreeColumnShowcase.css';
 
 const ThreeColumnShowcase = () => {
   return (
-    <section className="three-column-showcase px-4 py-8">
-      {/* Optional Title Section */}
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">
-          Seasonal Offers, Best Choice
-        </h2>
-      </div>
-
-      {/* Grid for 3 Columns */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <LeftColumn />
-        <CenterCarousel />
-        <RightColumn />
+    <section className="three-column-showcase-container">
+      <div className="three-column-grid">
+        <div className="column left">
+          <LeftColumn />
+        </div>
+        <div className="column center">
+          <CenterCarousel />
+        </div>
+        <div className="column right">
+          <RightColumn />
+        </div>
       </div>
     </section>
   );

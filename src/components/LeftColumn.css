@@ -1,78 +1,69 @@
-.showcase-left-wrapper {
+.right-column {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 1rem;
-  height: 100%;
+  gap: 12px;
+  width: 100%;
 }
 
-/* Banner Styling */
-.showcase-banner {
+/* Product Cards */
+.right-column .product-card {
   position: relative;
-  height: 240px;
-  background-size: cover;
-  background-position: center;
-  border-radius: 12px;
+  background: #fff;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease-in-out;
 }
 
-.banner-overlay {
-  background-color: rgba(0, 0, 0, 0.4);
-  color: white;
-  height: 100%;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.right-column .product-card:hover {
+  transform: translateY(-3px);
 }
 
-.banner-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
-}
-
-.banner-subtitle {
-  font-size: 1rem;
-  margin-bottom: 0.75rem;
-}
-
-.banner-button {
-  background-color: #ffffff;
-  color: #111827;
-  padding: 0.5rem 1rem;
+/* Add to Cart Button */
+.right-column .product-card .add-to-cart-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #0d6efd;
+  color: #fff;
+  padding: 8px;
+  border-radius: 50%;
   border: none;
-  border-radius: 6px;
-  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  z-index: 10;
+  transition: background 0.3s;
 }
 
-.banner-button:hover {
-  background-color: #f3f4f6;
+.right-column .product-card .add-to-cart-btn:hover {
+  background-color: #0056b3;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .showcase-left-wrapper {
-    flex-direction: column;
-  }
+/* Product Image */
+.right-column .product-card img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
 
-  .showcase-banner {
-    height: 180px;
-  }
+/* Banners */
+.right-column .banner {
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
 
-  .banner-title {
-    font-size: 1rem;
-  }
+.right-column .banner img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
 
-  .banner-subtitle {
-    font-size: 0.85rem;
-  }
-
-  .banner-button {
-    font-size: 0.9rem;
-    padding: 0.4rem 0.8rem;
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .right-column {
+    width: 100%;
+    gap: 16px;
   }
 }

@@ -1,49 +1,49 @@
-.showcase-wrapper {
+.carousel-wrapper {
   width: 100%;
-  height: 100%;
-  padding: 1rem 0;
+  padding: 0 10px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fdfdfd;
 }
 
-.showcase-carousel {
+/* Customize inner carousel */
+.carousel-wrapper .product-carousel {
   width: 100%;
   max-width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: white;
+}
+
+/* Override carousel controls if needed */
+.carousel-wrapper .slick-slider {
   position: relative;
 }
 
-.showcase-carousel .slick-slide {
-  display: flex;
-  justify-content: center;
-  padding: 0.5rem;
+.carousel-wrapper .slick-slide > div {
+  padding: 0 8px;
 }
 
-.showcase-carousel .slick-dots {
-  bottom: -20px;
+.carousel-wrapper .product-card {
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
 }
 
-.showcase-carousel .slick-dots li button:before {
-  color: #6b7280;
-  font-size: 10px;
-}
-
-.showcase-carousel .slick-dots li.slick-active button:before {
-  color: #111827;
-}
-
-/* Optional: Add card scaling animation */
-.showcase-carousel .slick-slide > div {
-  transition: transform 0.3s ease;
-}
-.showcase-carousel .slick-slide.slick-current > div {
+.carousel-wrapper .product-card:hover {
   transform: scale(1.02);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .showcase-carousel .slick-slide {
-    padding: 0.25rem;
+/* Responsive tweaks */
+@media screen and (max-width: 768px) {
+  .carousel-wrapper {
+    padding: 0 5px;
   }
 
-  .showcase-carousel .slick-dots {
-    bottom: -10px;
+  .carousel-wrapper .product-card {
+    margin: 0 auto;
   }
 }
