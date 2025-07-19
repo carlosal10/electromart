@@ -6,7 +6,6 @@ import { useCart } from '../context/CartContext';
 
 import Hero from '../components/Hero';
 import PopularProducts from '../components/PopularProducts';
-import ThreeColumnShowcase from '../components/ThreeColumnShowcase';
 import './App.css';
 
 
@@ -186,7 +185,6 @@ const Home = () => {
         </section>
         
       </div>
-      <ThreeColumnShowcase />
     </div>
   );
 };
