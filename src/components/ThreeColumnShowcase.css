@@ -1,38 +1,27 @@
 .three-column-showcase {
   width: 100%;
-  background-color: #f9fafb;
+  max-width: 1440px;
+  margin: 0 auto;
 }
 
 .three-column-showcase h2 {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 2rem;
-  color: #1f2937;
+  grid-column: 1 / -1;
+  font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 0.25rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #1f2937; /* gray-800 */
 }
 
-.three-column-showcase p {
-  font-size: 0.875rem;
-  color: #6b7280;
-}
-
-@media (min-width: 768px) {
+@media (max-width: 768px) {
   .three-column-showcase {
-    padding: 2rem 4rem;
-  }
-}
-
-@media (max-width: 767px) {
-  .three-column-showcase {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     padding: 1rem;
   }
 
   .three-column-showcase h2 {
-    font-size: 1.5rem;
-    text-align: center;
-  }
-
-  .three-column-showcase p {
-    text-align: center;
+    font-size: 1.25rem;
   }
 }
