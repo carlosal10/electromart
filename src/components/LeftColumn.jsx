@@ -1,59 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import ProductCard from './ProductCard';
 import './LeftColumn.css';
 
 const LeftColumn = () => {
-  const [leftProducts, setLeftProducts] = useState([]);
-  const [banners, setBanners] = useState([]);
+  const [data, setData] = useState({ banners: [], products: [] });
 
   useEffect(() => {
-    const fetchLeftProducts = async () => {
-      try {
-        const res = await axios.get('/api/products?limit=2');
-        setLeftProducts(res.data.slice(0, 2));
-      } catch (err) {
-        console.error('Error fetching left column products:', err);
-      }
-    };
-
-    const fetchBanners = async () => {
-      try {
-        const res = await axios.get('/api/banners?position=left');
-        setBanners(res.data);
-      } catch (err) {
-        console.error('Error fetching left column banners:', err);
-      }
-    };
-
-    fetchLeftProducts();
-    fetchBanners();
+    axios.get('https://ecommerce-electronics-0j4e.onrender.com/api/showcase/left')
+      .then(res => setData(res.data))
+      .catch(err => console.error('Error fetching left column data:', err));
   }, []);
 
   return (
     <div className="left-column">
-      <div className="top-banners">
-        {banners.slice(0, 3).map(banner => (
-          <img
-            key={banner._id}
-            src={banner.posterUrl}
-            alt={banner.title}
-            className="banner-image"
-          />
-        ))}
-      </div>
-
-      {leftProducts[0] && (
-        <div className="middle-product">
-          <ProductCard product={leftProducts[0]} />
+      {data.banners.slice(0, 3).map((banner, i) => (
+        <div className="banner-card" key={i}>
+          <img src={banner.image} alt={banner.title} className="banner-img" />
+          <div className="banner-text">
+            <h4>{banner.title}</h4>
+            <p>{banner.subtitle}</p>
+            <p>{banner.description}</p>
+          </div>
         </div>
-      )}
+      ))}
 
-      {leftProducts[1] && (
-        <div className="bottom-product">
-          <ProductCard product={leftProducts[1]} />
+      {data.products.map((product, i) => (
+        <div className="product-card" key={product._id}>
+          <div className="product-img-container">
+            <img src={product.images?.[0]} alt={product.name} className="product-img" />
+            <button className="add-to-cart">🛒</button>
+          </div>
+          <div className="product-details">
+            <h5>{product.name}</h5>
+            <p className="price">KES {product.price?.toLocaleString()}</p>
+            <p className={product.inStock ? 'in-stock' : 'out-of-stock'}>
+              {product.inStock ? 'In stock' : 'Out of stock'}
+            </p>
+          </div>
         </div>
-      )}
+      ))}
     </div>
   );
 };
