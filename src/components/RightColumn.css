@@ -1,77 +1,20 @@
-.showcase-right-wrapper {
+.right-column-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
   gap: 1rem;
 }
 
-.showcase-carousel {
-  flex: 1;
-  min-height: 280px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+.right-card {
   background-color: #fff;
-}
-
-.carousel-item {
-  padding: 0.5rem;
-}
-
-.showcase-banner {
-  background: linear-gradient(135deg, #fefefe, #f3f4f6);
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
   padding: 1rem;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
-  margin-top: auto;
 }
 
-.banner-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #111827;
-  margin-bottom: 0.25rem;
-}
-
-.banner-subtitle {
-  font-size: 0.95rem;
-  color: #4b5563;
-  margin-bottom: 0.75rem;
-}
-
-.banner-button {
-  background-color: #1f2937;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
-  border: none;
-  cursor: pointer;
-}
-
-.banner-button:hover {
-  background-color: #111827;
-  transform: scale(1.03);
-}
-
-/* Responsive tweaks */
-@media (max-width: 768px) {
-  .showcase-right-wrapper {
-    flex-direction: column;
-  }
-
-  .banner-title {
-    font-size: 1rem;
-  }
-
-  .banner-subtitle {
-    font-size: 0.875rem;
-  }
-
-  .banner-button {
-    padding: 0.4rem 0.8rem;
-  }
+.right-banner-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
 }
