@@ -133,16 +133,7 @@
     transform: scale(1.05);
   }
   
-  /* Footer */
-  .footer {
-    background: var(--college-blue);
-    color: var(--middle-blue);
-    text-align: center;
-    padding: 1rem;
-       position: fixed;
-  bottom: 0;
-      width: 100%;
-  }
+ 
 @media (max-width: 768px) {
 
   .hero {
