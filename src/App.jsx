@@ -9,15 +9,6 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import CartPage from './pages/CartPage';
-import EditProduct from './pages/EditProduct';
-import AdminProductList from './pages/AdminProductList';
-
-import AdminDashboard from './pages/admin/AdminDashboard';
-import AdminOverview from './pages/admin/AdminOverview';
-import AdminOrders from './pages/admin/AdminOrders';
-import AdminProducts from './pages/admin/AdminProducts';
-import AdminUsers from './pages/admin/AdminUsers';
-
 import ProductDetail from './components/ProductDetail';
 import FloatingCart from './components/FloatingCart';
 import MiniCart from './components/MiniCart';
