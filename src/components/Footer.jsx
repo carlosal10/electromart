@@ -1,6 +1,7 @@
 import React from 'react';
 import './Footer.css';
 import { FaCcVisa, FaCcMastercard, FaCcPaypal, FaCcAmex } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
