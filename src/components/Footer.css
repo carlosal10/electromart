@@ -44,6 +44,12 @@
   transition: color 0.2s ease-in-out;
 }
 
+.login{ color: #ccc;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+  
+}
+
 .footer-column ul li a:hover {
   color: #fff;
 }
