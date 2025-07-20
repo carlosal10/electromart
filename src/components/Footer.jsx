@@ -11,7 +11,7 @@ const Footer = () => {
         <div className="footer-column">
           <h4>My Account</h4>
           <ul>
-             <Link to="/login" className="icon-button" title="Account">
+             <Link to="/login"> Login
             </Link>
             <li><a href="/register">Register</a></li>
             <li><a href="/orders">My Orders</a></li>
