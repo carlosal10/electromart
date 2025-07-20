@@ -6,12 +6,9 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Home from './pages/Home';
-import AddProduct from './pages/AddProduct';
-import Shop from './pages/Shop';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import CartPage from './pages/CartPage';
-import MyOrders from './pages/MyOrders';
 import EditProduct from './pages/EditProduct';
 import AdminProductList from './pages/AdminProductList';
 
@@ -36,13 +33,10 @@ const AppRoutes = () => {
 
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/add-product" element={<AddProduct />} />
+        <Route path="/" element={<Home />} />    
         <Route path="/cart" element={<CartPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/my-orders" element={<MyOrders />} />
+        <Route path="/signup" element={<Signup />} />    
         <Route path="/product/:id" element={<ProductDetail />} />
 
         {/* Admin Routes */}
