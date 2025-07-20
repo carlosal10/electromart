@@ -121,12 +121,13 @@
 .hero-bg {
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
   width: 80%;
-  height: 80%;
+  height: 90%;
   background-size: cover;
   background-position: center;
   z-index: 0;
+  
 }
 
 /* Responsive styles */
