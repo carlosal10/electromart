@@ -62,9 +62,10 @@
 }
 
 .payment-icons {
-  font-size: 1.6rem;
+  font-size: 2.6rem;
   display: flex;
-  gap: 0.8rem;
+  gap: 1.8rem;
+  width: 20%;
 }
 
 @media (max-width: 768px) {
