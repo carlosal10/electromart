@@ -28,18 +28,7 @@ const AppRoutes = () => {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />    
-        <Route path="/product/:id" element={<ProductDetail />} />
-
-        {/* Admin Routes */}
-        <Route path="/admin/products" element={<AdminProductList />} />
-        <Route path="/admin/edit-product/:id" element={<EditProduct />} />
-        <Route path="/admin" element={<AdminDashboard />}>
-          <Route index element={<AdminOverview />} />
-          <Route path="overview" element={<AdminOverview />} />
-          <Route path="orders" element={<AdminOrders />} />
-          <Route path="products" element={<AdminProducts />} />
-          <Route path="users" element={<AdminUsers />} />
-        </Route>
+        <Route path="/product/:id" element={<ProductDetail />} />        
       </Routes>
 
       <Footer />
