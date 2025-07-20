@@ -11,7 +11,6 @@ const Footer = () => {
           <h4>My Account</h4>
           <ul>
              <Link to="/login" className="icon-button" title="Account">
-              <FaAccountCircle size={22} />
             </Link>
             <li><a href="/register">Register</a></li>
             <li><a href="/orders">My Orders</a></li>
