@@ -21,6 +21,10 @@
 @media (min-width: 768px) {
   .popularProducts .productGrid {
     grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+  }
+  .popularProducts .cartBtn{
+    margin-top:0.3rem;
   }
 }
 
