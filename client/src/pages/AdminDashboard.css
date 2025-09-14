@@ -1,0 +1,88 @@
+/* src/pages/admin/AdminDashboard.css */
+
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  background: #f8f9fb;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.admin-sidebar {
+  width: 250px;
+  background: #e8eae5;
+  color: #00412e;
+  padding: 2rem 1rem;
+  flex-shrink: 0;
+}
+
+.admin-sidebar h2 {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: #96bf8a;
+}
+
+.admin-sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+}
+
+.admin-sidebar nav li {
+  margin-bottom: 1rem;
+  color: black;
+}
+
+.admin-sidebar nav a {
+  display: block;
+  color: #111827; /* dark gray */
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+
+.admin-sidebar nav li.active a,
+.admin-sidebar nav a:hover {
+  background: #1f2937;
+  color: #38bdf8;
+}
+
+.admin-main {
+  flex-grow: 1;
+  padding: 2rem;
+  background: #f1f5f9;
+  overflow-y: auto;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .admin-container {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .admin-sidebar nav ul {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .admin-sidebar nav li {
+    margin: 0;
+  }
+
+  .admin-main {
+    padding: 1rem;
+  }
+}
