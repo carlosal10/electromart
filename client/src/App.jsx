@@ -1,38 +1,73 @@
-// src/App.jsx
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+import Home from './pages/Home';
 import Login from './pages/Login';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminOverview from './pages/AdminOverview';
-import AdminOrders from './pages/AdminOrders';
-import AdminProducts from './pages/AdminProducts';
-import AdminUsers from './pages/AdminUsers';
-import AdminEntryPage from './pages/AdminEntryPage';
+import Signup from './pages/Signup';
+import CartPage from './pages/CartPage';
+import ProductDetail from './components/ProductDetail';
+import FloatingCart from './components/FloatingCart';
+import MiniCart from './components/MiniCart';
+
+import { CartProvider, useCart } from './context/CartContext';
+
+import AdminDashboard from './admin/AdminDashboard';
+import AdminOverview from './admin/AdminOverview';
+import AdminOrders from './admin/AdminOrders';
+import AdminProducts from './admin/AdminProducts';
+import AdminUsers from './admin/AdminUsers';
+import AdminEntryPage from './admin/AdminEntryPage';
+
+const AppRoutes = () => {
+  const { isMiniCartOpen, setMiniCartOpen } = useCart();
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
+  return (
+    <>
+      {!isAdminRoute && <Navbar />}
+
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
+
+        <Route path="/admin" element={<AdminDashboard />}>
+          <Route index element={<Navigate to="overview" replace />} />
+          <Route path="overview" element={<AdminOverview />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="data-entry" element={<AdminEntryPage />} />
+        </Route>
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+
+      {!isAdminRoute && (
+        <>
+          <Footer />
+          <FloatingCart onClick={() => setMiniCartOpen(true)} />
+          <MiniCart isOpen={isMiniCartOpen} onClose={() => setMiniCartOpen(false)} />
+        </>
+      )}
+
+      <ToastContainer position="top-right" autoClose={2000} />
+    </>
+  );
+};
 
 const App = () => (
-  <>
-    <Routes>
-      {/* Public Route */}
-      <Route path="/login" element={<Login />} />
-
-      {/* Admin Routes under /admin */}
-      <Route path="/admin" element={<AdminDashboard />}>
-        <Route index element={<Navigate to="overview" replace />} />
-        <Route path="overview" element={<AdminOverview />} />
-        <Route path="orders" element={<AdminOrders />} />
-        <Route path="products" element={<AdminProducts />} />
-        <Route path="users" element={<AdminUsers />} />
-        <Route path="data-entry" element={<AdminEntryPage />} />
-      </Route>
-
-      {/* Catch-all redirects to admin */}
-      <Route path="*" element={<Navigate to="/admin" replace />} />
-    </Routes>
-
-    <Footer />
-  </>
+  <CartProvider>
+    <AppRoutes />
+  </CartProvider>
 );
 
 export default App;
