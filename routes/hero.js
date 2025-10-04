@@ -1,3 +1,5 @@
+import { validate, bannerCreateRules } from '../middleware/validators.js';
+import { requireAuth, requireRole } from '../middleware/auth.js';
 import express from 'express';
 import Hero from '../models/Banner.js';
 import { v2 as cloudinary } from 'cloudinary';
@@ -12,7 +14,7 @@ cloudinary.config({
 });
 
 // ✅ Create a new banner (supports different types)
-router.post('/', async (req, res) => {
+router.post('/', requireAuth, requireRole('admin'), validate(bannerCreateRules), async (req, res) => {
   try {
     const {
       title,
@@ -72,7 +74,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // ✅ Update a banner
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireAuth, requireRole('admin'), async (req, res) => {
   try {
     const updated = await Hero.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!updated) return res.status(404).json({ error: 'Banner not found' });
@@ -84,7 +86,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // ✅ Delete a banner
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireAuth, requireRole('admin'), async (req, res) => {
   try {
     const deleted = await Hero.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ error: 'Banner not found' });
@@ -96,3 +98,4 @@ router.delete('/:id', async (req, res) => {
 });
 
 export default router;
+

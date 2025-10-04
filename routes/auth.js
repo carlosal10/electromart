@@ -1,6 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { env } from '../config/env.js';
 import User from '../models/User.js';
 
 const router = express.Router();
@@ -31,8 +32,9 @@ router.post('/login', async (req, res) => {
   if (!user || !(await bcrypt.compare(password, user.password)))
     return res.status(401).json({ error: 'Invalid credentials' });
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  const token = jwt.sign({ id: user._id }, env.JWT_SECRET, { expiresIn: '7d' });
   res.json({ token });
 });
 
 export default router;
+

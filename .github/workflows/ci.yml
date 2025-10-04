@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install root deps
+        run: npm ci || npm install
+      - name: Install client deps
+        run: npm ci || npm install
+        working-directory: client
+      - name: Lint
+        run: npm run lint
+      - name: Test backend
+        run: npm run test:backend
+      - name: Test frontend
+        run: npm run test:frontend
+      - name: Build client
+        run: npm run build

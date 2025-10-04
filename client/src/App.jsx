@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Forbidden from './pages/Forbidden';
 import CartPage from './pages/CartPage';
 import ProductDetail from './components/ProductDetail';
 import FloatingCart from './components/FloatingCart';
@@ -21,6 +22,7 @@ import AdminOrders from './admin/AdminOrders';
 import AdminProducts from './admin/AdminProducts';
 import AdminUsers from './admin/AdminUsers';
 import AdminEntryPage from './admin/AdminEntryPage';
+import AdminRoute from './admin/AdminRoute';
 
 const AppRoutes = () => {
   const { isMiniCartOpen, setMiniCartOpen } = useCart();
@@ -39,7 +41,7 @@ const AppRoutes = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/product/:id" element={<ProductDetail />} />
 
-        <Route path="/admin" element={<AdminDashboard />}>
+        <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>}>
           <Route index element={<Navigate to="overview" replace />} />
           <Route path="overview" element={<AdminOverview />} />
           <Route path="orders" element={<AdminOrders />} />
@@ -48,7 +50,7 @@ const AppRoutes = () => {
           <Route path="data-entry" element={<AdminEntryPage />} />
         </Route>
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/forbidden" element={<Forbidden />} />`r`n        <Route path="*" element={<Navigate to="/" replace />} />} />
       </Routes>
 
       {!isAdminRoute && (
@@ -71,3 +73,4 @@ const App = () => (
 );
 
 export default App;
+

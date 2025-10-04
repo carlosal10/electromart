@@ -1,10 +1,12 @@
+import { validate, categoryCreateRules, subcategoryAddRules, brandAddRules } from '../middleware/validators.js';
+import { requireAuth, requireRole } from '../middleware/auth.js';
 import express from 'express';
 import Category from '../models/categories.js';
 
 const router = express.Router();
 
 // ✅ POST /api/categories - Create a main category (independent)
-router.post('/', async (req, res) => {
+router.post('/', requireAuth, requireRole('admin'), validate(categoryCreateRules), async (req, res) => {
   try {
     const { name } = req.body;
 
@@ -28,7 +30,7 @@ router.post('/', async (req, res) => {
 });
 
 // ✅ PUT /api/categories/:categoryName/add-sub - Add a subcategory to a main category
-router.put('/:categoryName/add-sub', async (req, res) => {
+router.put('/:categoryName/add-sub', requireAuth, requireRole('admin'), validate(subcategoryAddRules), async (req, res) => {
   try {
     const { name } = req.body;
     const { categoryName } = req.params;
@@ -51,7 +53,7 @@ router.put('/:categoryName/add-sub', async (req, res) => {
 });
 
 // ✅ POST /api/categories/:categoryName/:subName/brand - Add brand to a subcategory
-router.post('/:categoryName/:subName/brand', async (req, res) => {
+router.post('/:categoryName/:subName/brand', requireAuth, requireRole('admin'), validate(brandAddRules), async (req, res) => {
   try {
     const { brand } = req.body;
     const { categoryName, subName } = req.params;
@@ -87,3 +89,4 @@ router.get('/', async (req, res) => {
 });
 
 export default router;
+

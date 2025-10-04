@@ -1,3 +1,5 @@
+import { validate, productCreateRules, productUpdateRules } from '../middleware/validators.js';
+import { requireAuth, requireRole } from '../middleware/auth.js';
 import express from 'express';
 import Product from '../models/Product.js';
 import { v2 as cloudinary } from 'cloudinary';
@@ -12,7 +14,7 @@ cloudinary.config({
 });
 
 // ✅ CREATE PRODUCT
-router.post('/', async (req, res) => {
+router.post('/', requireAuth, requireRole('admin'), validate(productCreateRules), async (req, res) => {
   try {
     const {
       name, price, stock, inStock, features, description,
@@ -79,7 +81,7 @@ router.get('/', async (req, res) => {
 });
 
 // ✅ DELETE
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireAuth, requireRole('admin'), async (req, res) => {
   try {
     const deleted = await Product.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ error: 'Product not found' });
@@ -90,7 +92,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // ✅ UPDATE
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireAuth, requireRole('admin'), validate(productUpdateRules), async (req, res) => {
   try {
     const {
       name, price, stock, inStock, features, description,
@@ -139,3 +141,4 @@ router.get('/:id', async (req, res) => {
 });
 
 export default router;
+
