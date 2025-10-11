@@ -53,7 +53,7 @@ export const createApp = () => {
 
   app.get('/test', (_req, res) => { res.send('Server is working'); });
 
-  app.get(/^\\/(?!api).*/, (_req, res) => {
+  app.get(/^\/(?!api).*/, (_req, res) => {
     res.sendFile(path.join(clientBuildPath, 'index.html'));
   });
 
