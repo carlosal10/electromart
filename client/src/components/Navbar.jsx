@@ -9,6 +9,7 @@ import {
   MdCategory,
   MdPhone
 } from 'react-icons/md';
+import { apiUrl } from '../utils/api';
 import './Navbar.css';
 
 const Header = () => {
@@ -21,7 +22,7 @@ const Header = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/categories');
+        const res = await fetch(apiUrl('/api/categories'));
         const data = await res.json();
         setCategories(data);
       } catch (err) {

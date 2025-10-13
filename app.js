@@ -1,7 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 import mpesaRoutes from './routes/mpesa.js';
 import categoryRoutes from './routes/Category.js';
@@ -14,14 +12,27 @@ import showcaseRoutes from './routes/showcase.js';
 import { env } from './config/env.js';
 import { logger } from './utils/logger.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const allowedOrigins = [
+const fallbackOrigins = [
   'https://ecommerce-electronics-0j4e.onrender.com',
   'https://ecommerce-2sgt.onrender.com',
   'https://electromart-2vwj.onrender.com',
 ];
+
+const parseAllowedOrigins = () => {
+  try {
+    const parsed = JSON.parse(env.CORS_ORIGINS);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      return parsed;
+    }
+    logger.warn('CORS_ORIGINS env is not an array or is empty. Using fallback origins.');
+    return fallbackOrigins;
+  } catch (error) {
+    logger.warn({ error }, 'Failed to parse CORS_ORIGINS env. Using fallback origins.');
+    return fallbackOrigins;
+  }
+};
+
+const allowedOrigins = parseAllowedOrigins();
 
 export const createApp = () => {
   const app = express();
@@ -48,14 +59,7 @@ export const createApp = () => {
   app.use('/api/hero', heroRoutes);
   app.use('/api/showcase', showcaseRoutes);
 
-  const clientBuildPath = path.join(__dirname, env.CLIENT_BUILD_PATH);
-  app.use(express.static(clientBuildPath));
-
   app.get('/test', (_req, res) => { res.send('Server is working'); });
-
-  app.get(/^\/(?!api).*/, (_req, res) => {
-    res.sendFile(path.join(clientBuildPath, 'index.html'));
-  });
 
   return app;
 };

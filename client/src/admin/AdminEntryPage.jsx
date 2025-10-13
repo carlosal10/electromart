@@ -12,6 +12,7 @@ import AddCategoryForm from '../components/forms/AddCategoryForm';
 import AddBannerForm from '../components/forms/AddBannerForm';
 import AddBrandForm from '../components/forms/AddBrandForm';
 import { toast } from 'react-toastify';
+import { apiUrl } from '../utils/api';
 
 import './AdminEntryPage.css';
 
@@ -22,7 +23,7 @@ const AdminEntryPage = () => {
     console.log('🚀 Submitting Product:', payload);
 
     try {
-      const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/products', {
+      const res = await fetch(apiUrl('/api/products'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

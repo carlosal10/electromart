@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
+import { apiUrl } from '../utils/api';
 import 'react-toastify/dist/ReactToastify.css';
 import './auth.css';
 
@@ -13,7 +14,7 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/auth/signup', {
+      const res = await fetch(apiUrl('/api/auth/signup'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { FiTruck, FiShoppingCart, FiHeart, FiX } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { useCart } from '../context/CartContext';
+import { apiUrl } from '../utils/api';
 import './ProductDetail.css';
 
 const fallbackImage = '/images/fallback.jpg';
@@ -23,7 +24,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`https://ecommerce-electronics-0j4e.onrender.com/api/products/${id}`);
+        const res = await fetch(apiUrl(`/api/products/${id}`));
         if (!res.ok) throw new Error('Product not found');
         const data = await res.json();
         setProduct(data);
@@ -38,7 +39,7 @@ const ProductDetail = () => {
 
     const fetchSuggestions = async () => {
       try {
-        const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/products?limit=6');
+        const res = await fetch(apiUrl('/api/products?limit=6'));
         const data = await res.json();
         setSuggestions(data);
       } catch {

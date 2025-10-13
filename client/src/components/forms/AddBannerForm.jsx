@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { apiUrl } from '../../utils/api';
 import './FormStyles.css';
 
 const AddBannerForm = () => {
@@ -55,7 +56,7 @@ const AddBannerForm = () => {
     }
 
     try {
-      const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/hero', {
+      const res = await fetch(apiUrl('/api/hero'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),

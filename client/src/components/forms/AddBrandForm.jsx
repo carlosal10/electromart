@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { apiUrl } from '../../utils/api';
 import './FormStyles.css';
 
 const AddBrandForm = () => {
@@ -12,7 +13,7 @@ const AddBrandForm = () => {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/categories');
+        const res = await fetch(apiUrl('/api/categories'));
         const data = await res.json();
         setCategories(data);
       } catch {
@@ -40,7 +41,7 @@ const AddBrandForm = () => {
 
     setLoading(true);
     try {
-      const res = await fetch(`https://ecommerce-electronics-0j4e.onrender.com/api/categories/${categoryId}/subcategory/${subcategory}/brand`, {
+      const res = await fetch(apiUrl(`/api/categories/${categoryId}/subcategory/${subcategory}/brand`), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ brand: brandName }),

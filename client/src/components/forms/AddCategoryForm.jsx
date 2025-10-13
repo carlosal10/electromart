@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { apiUrl } from '../../utils/api';
 import './FormStyles.css';
 
 const AddCategoryForm = () => {
@@ -11,7 +12,7 @@ const AddCategoryForm = () => {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/categories');
+        const res = await fetch(apiUrl('/api/categories'));
         const data = await res.json();
         setCategories(data);
       } catch (err) {
@@ -24,7 +25,7 @@ const AddCategoryForm = () => {
   const handleAddMainCategory = async () => {
     if (!newMainCategory.trim()) return;
     try {
-      const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/categories', {
+      const res = await fetch(apiUrl('/api/categories'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newMainCategory }),
@@ -44,7 +45,7 @@ const AddCategoryForm = () => {
   const handleAddSubcategory = async () => {
     if (!mainCategory || !newSubcategory.trim()) return;
     try {
-      const res = await fetch(`https://ecommerce-electronics-0j4e.onrender.com/api/categories/${mainCategory}/add-sub`, {
+      const res = await fetch(apiUrl(`/api/categories/${mainCategory}/add-sub`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newSubcategory }),

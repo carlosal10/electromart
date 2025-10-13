@@ -50,7 +50,8 @@ const AppRoutes = () => {
           <Route path="data-entry" element={<AdminEntryPage />} />
         </Route>
 
-        <Route path="/forbidden" element={<Forbidden />} />`r`n        <Route path="*" element={<Navigate to="/" replace />} />} />
+        <Route path="/forbidden" element={<Forbidden />} />     
+        <Route path="*" element={<Navigate to="/" replace />} />  
       </Routes>
 
       {!isAdminRoute && (

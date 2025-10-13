@@ -8,6 +8,14 @@ export const env = cleanEnv(process.env, {
   PORT: num({ default: 5000 }),
   MONGO_URI: str(),
   CLIENT_BUILD_PATH: str({ default: 'client/build' }),
-  CORS_ORIGINS: str({ default: '' }),
+  CORS_ORIGINS: str({ 
+    default: JSON.stringify([
+      'https://ecommerce-electronics-0j4e.onrender.com',
+      'https://ecommerce-2sgt.onrender.com',
+      'https://electromart-2vwj.onrender.com'
+    ])
+  }),
   LOG_LEVEL: str({ default: 'info' }),
-  JWT_SECRET: str({ default: '' }),\n});
+  JWT_SECRET: str({ default: '23f4g5h6j7k8l9m0n' }),
+});
+  

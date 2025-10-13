@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { apiUrl } from '../../utils/api';
 import './FormStyles.css'; // Shared styling for all forms
 
 const ProductForm = ({ onSubmit }) => {
@@ -27,7 +28,7 @@ const ProductForm = ({ onSubmit }) => {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const res = await fetch('https://ecommerce-electronics-0j4e.onrender.com/api/categories');
+        const res = await fetch(apiUrl('/api/categories'));
         const data = await res.json();
         setCategories(data);
       } catch (err) {

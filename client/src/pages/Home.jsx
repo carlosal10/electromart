@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext';
 
 import Hero from '../components/Hero';
 import PopularProducts from '../components/PopularProducts';
+import { apiUrl } from '../utils/api';
 import './App.css';
 
 
@@ -26,8 +27,8 @@ const Home = () => {
     async function loadInitialData() {
       try {
         const [heroRes, catRes] = await Promise.all([
-          fetch('https://ecommerce-electronics-0j4e.onrender.com/api/hero'),
-          fetch('https://ecommerce-electronics-0j4e.onrender.com/api/categories'),
+          fetch(apiUrl('/api/hero')),
+          fetch(apiUrl('/api/categories')),
         ]);
         const hero = await heroRes.json();
         const cats = await catRes.json();
@@ -51,7 +52,7 @@ const Home = () => {
     const params = new URLSearchParams({ category: activeCategory });
     if (activeSub) params.set('subcategory', activeSub);
 
-    fetch(`https://ecommerce-electronics-0j4e.onrender.com/api/products?${params.toString()}`)
+    fetch(apiUrl(`/api/products?${params.toString()}`))
       .then(res => res.json())
       .then(setProducts)
       .catch(console.error)

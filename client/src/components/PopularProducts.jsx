@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiShoppingCart, FiTruck, FiStar } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { useCart } from '../context/CartContext';
+import { apiUrl } from '../utils/api';
 import './PopularProducts.css';
 
 const PopularProducts = ({ limit = 8 }) => {
@@ -13,7 +14,7 @@ const PopularProducts = ({ limit = 8 }) => {
   const { addToCart } = useCart();
 
   useEffect(() => {
-    fetch(`https://ecommerce-electronics-0j4e.onrender.com/api/products?popular=true&limit=${limit}`)
+    fetch(apiUrl(`/api/products?popular=true&limit=${limit}`))
       .then(res => res.json())
       .then(setProducts)
       .catch(console.error)

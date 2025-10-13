@@ -2,8 +2,9 @@ import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { toast, ToastContainer } from 'react-toastify';
-import './styles.css';
+import { apiUrl } from '../utils/api';
 import 'react-toastify/dist/ReactToastify.css';
+import './styles.css';
 
 const useCart = () => useContext(CartContext);
 
@@ -72,7 +73,7 @@ const CartPage = () => {
       // Optional: Trigger M-Pesa STK Push first if needed
       if (form.paymentMethod === 'mpesa') {
         const mpesaRes = await fetch(
-          'https://ecommerce-electronics-0j4e.onrender.com/api/payments/stkpush',
+          apiUrl('/api/payments/stkpush'),
           {
             method: 'POST',
             headers: {
@@ -96,7 +97,7 @@ const CartPage = () => {
       }
 
       const res = await fetch(
-        'https://ecommerce-electronics-0j4e.onrender.com/api/orders',
+        apiUrl('/api/orders'),
         {
           method: 'POST',
           headers: {
