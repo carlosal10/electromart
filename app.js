@@ -1,4 +1,6 @@
 import express from 'express';
+import path from 'path';
+import fs from 'fs';
 import cors from 'cors';
 
 import mpesaRoutes from './routes/mpesa.js';
@@ -52,7 +54,6 @@ export const createApp = () => {
   app.use(express.json());
   app.use('/api/products', productRoutes);
   app.use('/api/categories', categoryRoutes);
-  app.use('/uploads', express.static('uploads'));
   app.use('/api/orders', ordersRoutes);
   app.use('/api/auth', authRoutes);
   app.use('/api/payments', mpesaRoutes);
@@ -60,6 +61,8 @@ export const createApp = () => {
   app.use('/api/showcase', showcaseRoutes);
 
   app.get('/test', (_req, res) => { res.send('Server is working'); });
+
+  // Note: static serving removed per request (no express.static usage)
 
   return app;
 };
