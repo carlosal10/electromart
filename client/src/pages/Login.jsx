@@ -61,12 +61,22 @@ const Login = () => {
         password: form.password,
       });
 
+      // Dev logging: show raw login response to help debug missing token issues
+      if (process.env.NODE_ENV !== 'production') {
+        // eslint-disable-next-line no-console
+        console.info('[login] raw login response:', data);
+      }
+
       // Store token if provided
       const token = extractToken(data);
       if (token) localStorage.setItem('token', token);
 
       // Verify session/token and get role
       const me = await api.get('/api/auth/me'); // expects { id, email, role }
+      if (process.env.NODE_ENV !== 'production') {
+        // eslint-disable-next-line no-console
+        console.info('[login] /me response:', me);
+      }
       if (!me?.data?.id) throw new Error('Could not verify session after login.');
 
       toast.success('Login successful!');
