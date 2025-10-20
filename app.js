@@ -13,7 +13,7 @@ import { env } from './config/env.js';
 import { logger } from './utils/logger.js';
 
 const fallbackOrigins = [
-  'https://ecommerce-electronics-0j4e.onrender.com',
+  'https://electromart-server-4b6n.onrender.com',
   'https://ecommerce-2sgt.onrender.com',
   'https://electromart-2vwj.onrender.com',
 ];

@@ -15,7 +15,7 @@ export const initiateStkPush = async (req, res) => {
 
     // Get access token
     const tokenRes = await axios.get(
-      'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials',
+      'https://safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials',
       {
         auth: { username: consumerKey, password: consumerSecret },
       }

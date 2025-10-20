@@ -1,3 +1,4 @@
+// src/pages/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -9,6 +10,11 @@ const Login = () => {
   const location = useLocation();
   const [form, setForm] = useState({ emailOrPhone: '', password: '' });
   const [loading, setLoading] = useState(false);
+
+  // Determine if this login is for accessing admin (current path or "from" target)
+  const fromPath = location.state?.from?.pathname || '';
+  const isAdminContext =
+    location.pathname.startsWith('/admin') || fromPath.startsWith('/admin');
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -22,11 +28,25 @@ const Login = () => {
   };
 
   const extractToken = (data = {}) =>
-    data.token ||
-    data.accessToken ||
-    data.jwt ||
-    data.result?.token ||
-    null;
+    data.token || data.accessToken || data.jwt || data.result?.token || null;
+
+  const finalizeRedirect = (role) => {
+    // If admin is required but user is not admin -> forbidden
+    if (isAdminContext && role !== 'admin') {
+      toast.error('Admins only.');
+      navigate('/forbidden', { replace: true, state: { from: location } });
+      return;
+    }
+    // If admin, prefer admin dashboard
+    if (role === 'admin') {
+      navigate('/admin', { replace: true });
+      return;
+    }
+    // Normal user: go back to intended page or fallback
+    const fallback = '/cart';
+    const target = fromPath && !fromPath.startsWith('/admin') ? fromPath : fallback;
+    navigate(target, { replace: true });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,36 +55,22 @@ const Login = () => {
 
     setLoading(true);
     try {
+      // Attempt login
       const { data } = await api.post('/api/auth/login', {
         emailOrPhone: form.emailOrPhone.trim(),
         password: form.password,
       });
 
-      // 1) If server gives a token in the body, store it
+      // Store token if provided
       const token = extractToken(data);
-      if (token) {
-        localStorage.setItem('token', token);
-        toast.success('Login successful!');
-        const from = location.state?.from?.pathname || '/cart';
-        navigate(from, { replace: true });
-        return;
-      }
+      if (token) localStorage.setItem('token', token);
 
-      // 2) Otherwise, assume cookie/session — verify with /auth/me
-      try {
-        const me = await api.get('/auth/me');
-        if (me?.data?.id) {
-          toast.success('Login successful!');
-          const from = location.state?.from?.pathname || '/cart';
-          navigate(from, { replace: true });
-          return;
-        }
-      } catch {
-        // fallthrough to error below
-      }
+      // Verify session/token and get role
+      const me = await api.get('/api/auth/me'); // expects { id, email, role }
+      if (!me?.data?.id) throw new Error('Could not verify session after login.');
 
-      // Neither token nor valid /auth/me → show a precise error
-      throw new Error('Logged in response had no token and session could not be verified.');
+      toast.success('Login successful!');
+      finalizeRedirect(me.data.role);
     } catch (err) {
       toast.error(err.message || 'Login failed');
     } finally {
@@ -74,7 +80,7 @@ const Login = () => {
 
   return (
     <div className="auth-page">
-      <h2>Login</h2>
+      <h2>{isAdminContext ? 'Admin Login' : 'Login'}</h2>
       <form onSubmit={handleSubmit} className="auth-form" noValidate>
         <input
           name="emailOrPhone"
@@ -99,19 +105,21 @@ const Login = () => {
         </button>
       </form>
 
-      <div className="auth-links">
-        <p>
-          Don’t have an account?{' '}
-          <span className="auth-link" onClick={() => navigate('/signup')}>
-            Sign up
-          </span>
-        </p>
-        <p>
-          <span className="auth-link" onClick={() => navigate('/forgot-password')}>
-            Forgot password?
-          </span>
-        </p>
-      </div>
+      {!isAdminContext && (
+        <div className="auth-links">
+          <p>
+            Don’t have an account?{' '}
+            <span className="auth-link" onClick={() => navigate('/signup')}>
+              Sign up
+            </span>
+          </p>
+          <p>
+            <span className="auth-link" onClick={() => navigate('/forgot-password')}>
+              Forgot password?
+            </span>
+          </p>
+        </div>
+      )}
     </div>
   );
 };
