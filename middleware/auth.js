@@ -1,57 +1,28 @@
-import express from 'express';
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env.js';
-import { requireAuth } from '../middleware/auth.js';
-import User from '../models/User.js';
 
-const router = express.Router();
+// Middleware that verifies a Bearer token in Authorization header
+export const requireAuth = (req, res, next) => {
+  const auth = req.headers.authorization || '';
+  const token = auth.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Access denied. No token provided.' });
 
-/**
- * POST /api/auth/login
- * expects: { emailOrPhone, password }
- * responds: { token, user: { id, email, role } }
- */
-router.post('/login', async (req, res) => {
   try {
-    const { emailOrPhone, password } = req.body || {};
-    if (!emailOrPhone || !password)
-      return res.status(400).json({ error: 'Missing credentials' });
-
-    // Find by email OR phone
-    const user = await User.findOne({
-      $or: [{ email: emailOrPhone }, { phone: emailOrPhone }],
-    });
-    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
-
-    // Assuming you stored a hashed password; adjust if using plain
-    const bcrypt = await import('bcrypt');
-    const valid = await bcrypt.compare(password, user.passwordHash);
-    if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
-
-    // Include id/email/role in JWT payload
-    const payload = { id: user._id, email: user.email, role: user.role || 'user' };
-    const token = jwt.sign(payload, env.JWT_SECRET, { expiresIn: '7d' });
-
-    return res.json({ token, user: payload });
+    const decoded = jwt.verify(token, env.JWT_SECRET);
+    req.user = decoded; // payload (should include id, role, etc.)
+    return next();
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Login failed' });
+    console.error('JWT verify error:', err && err.message);
+    return res.status(401).json({ error: 'Invalid or expired token.' });
   }
-});
+};
 
-/**
- * GET /api/auth/me
- * Protected route — verifies JWT and returns user identity.
- */
-router.get('/me', requireAuth, async (req, res) => {
-  try {
-    // Look up latest user in DB in case role/email changed
-    const user = await User.findById(req.user.id).select('email role');
-    if (!user) return res.status(404).json({ error: 'User not found' });
-    res.json({ id: user._id, email: user.email, role: user.role });
-  } catch {
-    res.status(401).json({ error: 'Unauthorized' });
-  }
-});
+// Role guard factory: requireRole('admin') etc.
+export const requireRole = (role) => (req, res, next) => {
+  if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
+  if ((req.user.role || 'user') !== role) return res.status(403).json({ error: 'Forbidden' });
+  return next();
+};
 
-export default router;
+// Export a convenience isAdmin (optional)
+export const isAdmin = (req, res, next) => requireRole('admin')(req, res, next);
