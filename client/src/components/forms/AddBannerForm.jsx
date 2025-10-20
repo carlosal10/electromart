@@ -106,7 +106,7 @@ const AddBannerForm = () => {
       />
       <input type="file" accept="image/*" onChange={handleImageUpload} />
       {form.imageUrl && (
-        <img src={form.imageUrl} alt="Image Preview" className="preview-img" />
+        <img src={form.imageUrl} alt="Preview" className="preview-img" />
       )}
       <input
         name="buttonText"

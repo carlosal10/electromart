@@ -1,33 +1,51 @@
+// src/pages/Login.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import { apiUrl } from '../utils/api';
-import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { api } from '../utils/api';
 import './auth.css';
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [form, setForm] = useState({ emailOrPhone: '', password: '' });
   const [loading, setLoading] = useState(false);
 
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+  };
+
+  const validate = () => {
+    if (!form.emailOrPhone.trim()) return 'Email or phone is required';
+    if (!form.password) return 'Password is required';
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const errMsg = validate();
+    if (errMsg) {
+      toast.warn(errMsg);
+      return;
+    }
     setLoading(true);
     try {
-      const res = await fetch(apiUrl('/api/auth/login'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+      const { data } = await api.post('/api/auth/login', {
+        emailOrPhone: form.emailOrPhone.trim(),
+        password: form.password,
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Login failed');
+      if (!data?.token) throw new Error('No token returned by server');
 
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('token', data.token); // keep key consistent with api.js
       toast.success('Login successful!');
-      navigate('/cart');
+
+      // Redirect to the page the user originally wanted, or fallback
+      const from = location.state?.from?.pathname || '/cart';
+      navigate(from, { replace: true });
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -35,25 +53,28 @@ const Login = () => {
 
   return (
     <div className="auth-page">
-      <ToastContainer />
       <h2>Login</h2>
-      <form onSubmit={handleSubmit} className="auth-form">
+      <form onSubmit={handleSubmit} className="auth-form" noValidate>
         <input
+          name="emailOrPhone"
           type="text"
           placeholder="Email or Phone"
           value={form.emailOrPhone}
-          onChange={(e) => setForm({ ...form, emailOrPhone: e.target.value })}
+          onChange={onChange}
           required
+          autoComplete="username"
         />
         <input
+          name="password"
           type="password"
           placeholder="Password"
           value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          onChange={onChange}
           required
+          autoComplete="current-password"
         />
         <button type="submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? 'Logging in…' : 'Login'}
         </button>
       </form>
 

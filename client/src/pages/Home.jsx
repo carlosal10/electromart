@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+// Home.jsx
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiShoppingCart } from 'react-icons/fi';
 import { toast } from 'react-toastify';
@@ -9,6 +10,15 @@ import PopularProducts from '../components/PopularProducts';
 import { apiUrl } from '../utils/api';
 import './App.css';
 
+// Helpers
+function formatKES(amount) {
+  if (amount == null || Number.isNaN(Number(amount))) return 'Ksh —';
+  try { return `Ksh ${new Intl.NumberFormat('en-KE').format(Number(amount))}`; }
+  catch { return `Ksh ${amount}`; }
+}
+
+const IMG_FALLBACK =
+  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480"><rect width="100%" height="100%" fill="%23f2f2f2"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23999" font-family="Arial" font-size="20">No image</text></svg>';
 
 const Home = () => {
   const [heroData, setHeroData] = useState([]);
@@ -21,43 +31,70 @@ const Home = () => {
   const [loadingProducts, setLoadingProducts] = useState(false);
 
   const navigate = useNavigate();
-  const { addToCart } = useCart(); // ✅ Access cart actions
+  const { addToCart } = useCart();
 
+  // Initial data load
   useEffect(() => {
-    async function loadInitialData() {
+    const ac = new AbortController();
+
+    async function loadInitialData(signal) {
       try {
         const [heroRes, catRes] = await Promise.all([
-          fetch(apiUrl('/api/hero')),
-          fetch(apiUrl('/api/categories')),
+          fetch(apiUrl('/api/hero'), { signal }),
+          fetch(apiUrl('/api/categories'), { signal }),
         ]);
+        if (!heroRes.ok) throw new Error(`Hero ${heroRes.status}`);
+        if (!catRes.ok) throw new Error(`Categories ${catRes.status}`);
+
         const hero = await heroRes.json();
         const cats = await catRes.json();
         setHeroData(hero);
         setCategories(cats);
       } catch (err) {
-        console.error('Failed to load initial data', err);
+        if (err.name !== 'AbortError') {
+          console.error('Failed to load initial data', err);
+          toast.error('Failed to load homepage data. Please retry.');
+        }
       } finally {
         setLoadingHero(false);
         setLoadingCats(false);
       }
     }
 
-    loadInitialData();
+    loadInitialData(ac.signal);
+    return () => ac.abort();
   }, []);
 
+  // Compute query string for products
+  const productQuery = useMemo(() => {
+    const p = new URLSearchParams();
+    if (activeCategory) p.set('category', activeCategory);
+    if (activeSub) p.set('subcategory', activeSub);
+    return p.toString();
+  }, [activeCategory, activeSub]);
+
+  // Load products when filters change
   useEffect(() => {
-    if (!activeCategory) return;
+    if (!activeCategory) { setProducts([]); return; }
+    const ac = new AbortController();
     setLoadingProducts(true);
 
-    const params = new URLSearchParams({ category: activeCategory });
-    if (activeSub) params.set('subcategory', activeSub);
-
-    fetch(apiUrl(`/api/products?${params.toString()}`))
-      .then(res => res.json())
-      .then(setProducts)
-      .catch(console.error)
+    fetch(apiUrl(`/api/products?${productQuery}`), { signal: ac.signal })
+      .then(res => {
+        if (!res.ok) throw new Error(`Products ${res.status}`);
+        return res.json();
+      })
+      .then(data => setProducts(Array.isArray(data) ? data : []))
+      .catch(err => {
+        if (err.name !== 'AbortError') {
+          console.error(err);
+          toast.error('Could not load products. Try another filter or refresh.');
+        }
+      })
       .finally(() => setLoadingProducts(false));
-  }, [activeCategory, activeSub]);
+
+    return () => ac.abort();
+  }, [productQuery, activeCategory]);
 
   const handleCardClick = (id) => {
     navigate(`/product/${id}`);
@@ -66,13 +103,13 @@ const Home = () => {
   const handleAddToCart = (e, product) => {
     e.stopPropagation();
 
-    if (!product.inStock) {
+    if (!product?.inStock) {
       toast.warn('Sorry, this product is out of stock.');
       return;
     }
 
     addToCart(product);
-    toast.success(`${product.name} added to cart!`);
+    toast.success(`${product?.name || 'Item'} added to cart!`);
   };
 
   return (
@@ -145,32 +182,33 @@ const Home = () => {
                 >
                   <div className="imageWrapper">
                     <img
-                      src={product.photoUrls?.[0]}
-                      alt={product.name}
+                      src={product?.photoUrls?.[0] || IMG_FALLBACK}
+                      alt={product?.name || 'Product'}
                       loading="lazy"
+                      onError={(e) => { e.currentTarget.src = IMG_FALLBACK; }}
                     />
                   </div>
                   <div className="cardBody">
-                    <h3>{product.name}</h3>
-                    <p className="code">Code: {product._id.slice(-6)}</p>
-                    <p className="price">Ksh {product.price.toLocaleString()}</p>
-                    {product.discount && product.originalPrice && (
+                    <h3>{product?.name || 'Unnamed item'}</h3>
+                    <p className="code">Code: {String(product?._id || '').slice(-6)}</p>
+                    <p className="price">{formatKES(product?.price)}</p>
+                    {Number(product?.discount) > 0 && Number(product?.originalPrice) > 0 && (
                       <span className="discount">
-                        (was Ksh {product.originalPrice.toLocaleString()}, save {product.discount}%)
+                        (was {formatKES(product.originalPrice)}, save {product.discount}%)
                       </span>
                     )}
-                    <p className={`stock ${product.inStock ? 'inStock' : 'outOfStock'}`}>
-                      {product.inStock ? 'In Stock' : 'Out of Stock'}
+                    <p className={`stock ${product?.inStock ? 'inStock' : 'outOfStock'}`}>
+                      {product?.inStock ? 'In Stock' : 'Out of Stock'}
                     </p>
                     <p className="rating">
-                      ⭐ {product.rating || 4.5} ({product.reviewsCount || 12} reviews)
+                      ⭐ {Number(product?.rating) || 4.5} ({Number(product?.reviewsCount) || 12} reviews)
                     </p>
-                    {product.freeShipping && (
+                    {product?.freeShipping && (
                       <p className="shipping">🚚 Free Shipping</p>
                     )}
                     <button
                       className="cartBtn"
-                      disabled={!product.inStock}
+                      disabled={!product?.inStock}
                       onClick={(e) => handleAddToCart(e, product)}
                     >
                       <FiShoppingCart style={{ marginRight: '8px' }} />
@@ -184,7 +222,6 @@ const Home = () => {
             <div className="error">No products found in this category.</div>
           )}
         </section>
-        
       </div>
     </div>
   );

@@ -23,7 +23,7 @@ const ProductForm = ({ onSubmit }) => {
   const [subcategory, setSubcategory] = useState('');
   const [brand, setBrand] = useState('');
   const [previews, setPreviews] = useState([]);
-  const [loading, setLoading] = useState(false);
+  
 
   useEffect(() => {
     async function fetchCategories() {
