@@ -36,11 +36,29 @@ const getAuthHeader = () => {
 
 // --- Unified response handler ---
 const handleResponse = async (res) => {
-  const data = await res.json().catch(() => ({}));
+  // Some responses (304 Not Modified or 204 No Content) may have empty bodies.
+  // Try to parse JSON, but fall back to an empty object when there's no body.
+  const data = await res
+    .text()
+    .then((t) => {
+      try {
+        return t ? JSON.parse(t) : {};
+      } catch (e) {
+        return {};
+      }
+    })
+    .catch(() => ({}));
+
+  // Treat 304 as a cache-related issue for API endpoints (auth should never be served from cache).
+  if (res.status === 304) {
+    throw new Error('Not Modified (304) - resource served from cache. Try disabling cache or ensure the server does not return 304 for API endpoints.');
+  }
+
   if (!res.ok) {
     const message = data?.error || res.statusText || 'Request failed';
     throw new Error(message);
   }
+
   return { data };
 };
 
@@ -50,6 +68,7 @@ export const api = {
     const res = await fetch(apiUrl(path), {
       headers: { ...getAuthHeader() },
       credentials: 'include',
+      cache: 'no-store',
     });
     return handleResponse(res);
   },
@@ -59,6 +78,7 @@ export const api = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
       credentials: 'include',
+      cache: 'no-store',
       body: JSON.stringify(body),
     });
     return handleResponse(res);
@@ -69,6 +89,7 @@ export const api = {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
       credentials: 'include',
+      cache: 'no-store',
       body: JSON.stringify(body),
     });
     return handleResponse(res);
@@ -79,6 +100,7 @@ export const api = {
       method: 'DELETE',
       headers: { ...getAuthHeader() },
       credentials: 'include',
+      cache: 'no-store',
     });
     return handleResponse(res);
   },
@@ -91,6 +113,8 @@ export const uploadFile = async (path, file) => {
   const res = await fetch(apiUrl(path), {
     method: 'POST',
     headers: { ...getAuthHeader() },
+    // file uploads shouldn't be cached
+    cache: 'no-store',
     body: form,
   });
   return handleResponse(res);
