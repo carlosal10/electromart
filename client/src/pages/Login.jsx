@@ -71,16 +71,29 @@ const Login = () => {
       const token = extractToken(data);
       if (token) localStorage.setItem('token', token);
 
-      // Verify session/token and get role
-      const me = await api.get('/api/auth/me'); // expects { id, email, role }
+      // Verify session/token and get role using the freshly issued token when available
+      const me = await api.get(
+        '/api/auth/me',
+        token ? { authToken: token } : undefined,
+      ); // expects { id, email, role }
       if (process.env.NODE_ENV !== 'production') {
         // eslint-disable-next-line no-console
         console.info('[login] /me response:', me);
       }
-      if (!me?.data?.id) throw new Error('Could not verify session after login.');
+
+      const profile = me?.data || {};
+      const userId =
+        profile.id ||
+        profile._id ||
+        profile.userId ||
+        profile.user?.id ||
+        profile.user?._id ||
+        null;
+      if (!userId) throw new Error('Could not verify session after login.');
+      const role = profile.role ?? profile.user?.role ?? 'user';
 
       toast.success('Login successful!');
-      finalizeRedirect(me.data.role);
+      finalizeRedirect(role);
     } catch (err) {
       toast.error(err.message || 'Login failed');
     } finally {

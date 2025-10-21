@@ -29,8 +29,15 @@ export const apiUrl = (path) => {
 };
 
 // --- Auth header helper ---
-const getAuthHeader = () => {
-  const token = localStorage.getItem('token'); // adjust key if you use a different one
+const getAuthHeader = (explicitToken) => {
+  let token = explicitToken;
+  if (!token) {
+    try {
+      token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') : null;
+    } catch (_) {
+      token = null;
+    }
+  }
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
@@ -63,59 +70,74 @@ const handleResponse = async (res) => {
 };
 
 // --- Minimal fetch wrapper ---
+const mergeHeaders = (authToken, extraHeaders) => ({
+  ...getAuthHeader(authToken),
+  ...(extraHeaders || {}),
+});
+
 export const api = {
-  async get(path) {
+  async get(path, options = {}) {
+    const { authToken, headers, ...fetchOptions } = options;
     const res = await fetch(apiUrl(path), {
-      headers: { ...getAuthHeader() },
+      headers: mergeHeaders(authToken, headers),
       credentials: 'include',
       cache: 'no-store',
+      ...fetchOptions,
     });
     return handleResponse(res);
   },
 
-  async post(path, body) {
+  async post(path, body, options = {}) {
+    const { authToken, headers, ...fetchOptions } = options;
     const res = await fetch(apiUrl(path), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+      headers: { 'Content-Type': 'application/json', ...mergeHeaders(authToken, headers) },
       credentials: 'include',
       cache: 'no-store',
       body: JSON.stringify(body),
+      ...fetchOptions,
     });
     return handleResponse(res);
   },
 
-  async put(path, body) {
+  async put(path, body, options = {}) {
+    const { authToken, headers, ...fetchOptions } = options;
     const res = await fetch(apiUrl(path), {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+      headers: { 'Content-Type': 'application/json', ...mergeHeaders(authToken, headers) },
       credentials: 'include',
       cache: 'no-store',
       body: JSON.stringify(body),
+      ...fetchOptions,
     });
     return handleResponse(res);
   },
 
-  async del(path) {
+  async del(path, options = {}) {
+    const { authToken, headers, ...fetchOptions } = options;
     const res = await fetch(apiUrl(path), {
       method: 'DELETE',
-      headers: { ...getAuthHeader() },
+      headers: mergeHeaders(authToken, headers),
       credentials: 'include',
       cache: 'no-store',
+      ...fetchOptions,
     });
     return handleResponse(res);
   },
 };
 
 // Optional: file upload helper
-export const uploadFile = async (path, file) => {
+export const uploadFile = async (path, file, options = {}) => {
+  const { authToken, headers, ...fetchOptions } = options;
   const form = new FormData();
   form.append('file', file);
   const res = await fetch(apiUrl(path), {
     method: 'POST',
-    headers: { ...getAuthHeader() },
+    headers: mergeHeaders(authToken, headers),
     // file uploads shouldn't be cached
     cache: 'no-store',
     body: form,
+    ...fetchOptions,
   });
   return handleResponse(res);
 };
