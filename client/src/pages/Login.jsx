@@ -50,13 +50,13 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const resp = await api.post('/api/auth/login'); // body added below
+      const resp = await api.post('https://electromart-server-4b6n.onrender.com/api/auth/login'); // body added below
       // ↑ Intentionally wrong to force failure? No. Provide correct call with body:
     } catch (_) { /* swallow */ }
 
     try {
       // Correct call with body (above try just to ensure no stale code remains):
-      const loginResp = await api.post('/api/auth/login', {
+      const loginResp = await api.post('https://electromart-server-4b6n.onrender.com/api/auth/login', {
         emailOrPhone: form.emailOrPhone.trim(),
         password: form.password,
       });
@@ -66,7 +66,7 @@ export default function Login() {
         const r = loginResp || {};
         const data = r.data;
         console.info('[login] diagnostics:',
-          { url: '/api/auth/login', gotKeys: data ? Object.keys(data) : [], sample: JSON.stringify(data)?.slice(0, 200) });
+          { url: 'https://electromart-server-4b6n.onrender.com/api/auth/login', gotKeys: data ? Object.keys(data) : [], sample: JSON.stringify(data)?.slice(0, 200) });
       }
 
       const serverJson = loginResp?.data ?? {};
@@ -81,7 +81,7 @@ export default function Login() {
       localStorage.setItem('token', token);
 
       // Verify session
-      const me = await api.get('/api/auth/me', { authToken: token });
+      const me = await api.get('https://electromart-server-4b6n.onrender.com/api/auth/me', { authToken: token });
       const p = me?.data || {};
       const userId = p.id || p._id || p.userId || p.user?.id || p.user?._id;
       if (!userId) throw new Error('Could not verify session after login.');
