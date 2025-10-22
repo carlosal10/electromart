@@ -50,11 +50,6 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const resp = await api.post('/api/auth/login'); // body added below
-      // ↑ Intentionally wrong to force failure? No. Provide correct call with body:
-    } catch (_) { /* swallow */ }
-
-    try {
       // Correct call with body (above try just to ensure no stale code remains):
       const loginResp = await api.post('/api/auth/login', {
         emailOrPhone: form.emailOrPhone.trim(),
