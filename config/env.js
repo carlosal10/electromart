@@ -10,7 +10,7 @@ export const env = cleanEnv(process.env, {
   CLIENT_BUILD_PATH: str({ default: 'client/build' }),
   CORS_ORIGINS: str({ 
     default: JSON.stringify([
-      'https://ecommerce-electronics-0j4e.onrender.com',
+      'https://electromart-server-4b6n.onrender.com',
       'https://ecommerce-2sgt.onrender.com',
       'https://electromart-2vwj.onrender.com'
     ])
