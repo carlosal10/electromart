@@ -1,4 +1,4 @@
-// src/pages/Login.jsx
+// File: src/pages/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -11,7 +11,6 @@ const Login = () => {
   const [form, setForm] = useState({ emailOrPhone: '', password: '' });
   const [loading, setLoading] = useState(false);
 
-  // Determine if this login is for accessing admin (current path or "from" target)
   const fromPath = location.state?.from?.pathname || '';
   const isAdminContext =
     location.pathname.startsWith('/admin') || fromPath.startsWith('/admin');
@@ -31,18 +30,15 @@ const Login = () => {
     data.token || data.accessToken || data.jwt || data.result?.token || null;
 
   const finalizeRedirect = (role) => {
-    // If admin is required but user is not admin -> forbidden
     if (isAdminContext && role !== 'admin') {
       toast.error('Admins only.');
       navigate('/forbidden', { replace: true, state: { from: location } });
       return;
     }
-    // If admin, prefer admin dashboard
     if (role === 'admin') {
       navigate('/admin', { replace: true });
       return;
     }
-    // Normal user: go back to intended page or fallback
     const fallback = '/cart';
     const target = fromPath && !fromPath.startsWith('/admin') ? fromPath : fallback;
     navigate(target, { replace: true });
@@ -55,29 +51,24 @@ const Login = () => {
 
     setLoading(true);
     try {
-      // Attempt login
+      // 1) Login -> get token
       const { data } = await api.post('/api/auth/login', {
         emailOrPhone: form.emailOrPhone.trim(),
         password: form.password,
       });
 
-      // Dev logging: show raw login response to help debug missing token issues
       if (process.env.NODE_ENV !== 'production') {
-        // eslint-disable-next-line no-console
         console.info('[login] raw login response:', data);
       }
 
-      // Store token if provided
       const token = extractToken(data);
-      if (token) localStorage.setItem('token', token);
+      if (!token) throw new Error('Login succeeded but no token returned.');
+      localStorage.setItem('token', token); // persist
 
-      // Verify session/token and get role using the freshly issued token when available
-      const me = await api.get(
-        '/api/auth/me',
-        token ? { authToken: token } : undefined,
-      ); // expects { id, email, role }
+      // 2) Verify session with proper Bearer header (critical fix)
+      const me = await api.get('/api/auth/me', { authToken: token });
+
       if (process.env.NODE_ENV !== 'production') {
-        // eslint-disable-next-line no-console
         console.info('[login] /me response:', me);
       }
 
@@ -127,22 +118,6 @@ const Login = () => {
           {loading ? 'Logging in…' : 'Login'}
         </button>
       </form>
-
-      {!isAdminContext && (
-        <div className="auth-links">
-          <p>
-            Don’t have an account?{' '}
-            <span className="auth-link" onClick={() => navigate('/signup')}>
-              Sign up
-            </span>
-          </p>
-          <p>
-            <span className="auth-link" onClick={() => navigate('/forgot-password')}>
-              Forgot password?
-            </span>
-          </p>
-        </div>
-      )}
     </div>
   );
 };
