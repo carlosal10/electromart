@@ -5,6 +5,37 @@ import { toast } from 'react-toastify';
 import { api } from '../utils/api';
 import './auth.css';
 
+// Recursively search for a token-like field
+const extractTokenDeep = (obj, seen = new Set()) => {
+  if (!obj || typeof obj !== 'object') return null;
+  if (seen.has(obj)) return null;
+  seen.add(obj);
+
+  // Normalize keys for robust matching
+  for (const [k, v] of Object.entries(obj)) {
+    const key = String(k).toLowerCase();
+    if (['token', 'access_token', 'accesstoken', 'jwt'].includes(key) && typeof v === 'string') {
+      return v;
+    }
+  }
+  // Common nests
+  const candidates = ['data', 'result', 'payload', 'user', 'auth', 'response'];
+  for (const c of candidates) {
+    if (obj[c]) {
+      const t = extractTokenDeep(obj[c], seen);
+      if (t) return t;
+    }
+  }
+  // Fallback: deep scan
+  for (const v of Object.values(obj)) {
+    if (v && typeof v === 'object') {
+      const t = extractTokenDeep(v, seen);
+      if (t) return t;
+    }
+  }
+  return null;
+};
+
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -15,19 +46,13 @@ const Login = () => {
   const isAdminContext =
     location.pathname.startsWith('/admin') || fromPath.startsWith('/admin');
 
-  const onChange = (e) => {
-    const { name, value } = e.target;
-    setForm((f) => ({ ...f, [name]: value }));
-  };
+  const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
   const validate = () => {
     if (!form.emailOrPhone.trim()) return 'Email or phone is required';
     if (!form.password) return 'Password is required';
     return null;
   };
-
-  const extractToken = (data = {}) =>
-    data.token || data.accessToken || data.jwt || data.result?.token || null;
 
   const finalizeRedirect = (role) => {
     if (isAdminContext && role !== 'admin') {
@@ -51,21 +76,36 @@ const Login = () => {
 
     setLoading(true);
     try {
-      // 1) Login -> get token
-      const { data } = await api.post('/api/auth/login', {
+      // 1) Login -> get token (shape may vary depending on backend or proxy)
+      const loginResp = await api.post('/api/auth/login', {
         emailOrPhone: form.emailOrPhone.trim(),
         password: form.password,
       });
 
+      // Helpful diagnostics in dev
       if (process.env.NODE_ENV !== 'production') {
-        console.info('[login] raw login response:', data);
+        console.info('[login] raw /login response object:', loginResp);
+        console.info('[login] top-level keys:', Object.keys(loginResp || {}));
+        console.info('[login] data keys:', loginResp?.data ? Object.keys(loginResp.data) : '(no data)');
       }
 
-      const token = extractToken(data);
-      if (!token) throw new Error('Login succeeded but no token returned.');
-      localStorage.setItem('token', token); // persist
+      // Our fetch wrapper returns { data: <server JSON> }
+      const serverJson = loginResp?.data ?? {};
+      const token =
+        serverJson.token ||
+        extractTokenDeep(serverJson); // tolerant extraction
 
-      // 2) Verify session with proper Bearer header (critical fix)
+      if (!token) {
+        const topLevelKeys = Object.keys(serverJson || {});
+        throw new Error(
+          `Login succeeded but no token returned. Keys: [${topLevelKeys.join(', ')}]. ` +
+          `Expected "token" or similar (accessToken/jwt).`
+        );
+      }
+
+      localStorage.setItem('token', token);
+
+      // 2) Verify session with proper Bearer header
       const me = await api.get('/api/auth/me', { authToken: token });
 
       if (process.env.NODE_ENV !== 'production') {
@@ -73,13 +113,7 @@ const Login = () => {
       }
 
       const profile = me?.data || {};
-      const userId =
-        profile.id ||
-        profile._id ||
-        profile.userId ||
-        profile.user?.id ||
-        profile.user?._id ||
-        null;
+      const userId = profile.id || profile._id || profile.userId || profile.user?.id || profile.user?._id || null;
       if (!userId) throw new Error('Could not verify session after login.');
       const role = profile.role ?? profile.user?.role ?? 'user';
 
