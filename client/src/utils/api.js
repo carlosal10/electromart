@@ -9,7 +9,7 @@ const normalizeBaseUrl = (baseUrl = '') => {
 const readEnvBase = () => {
   let v = '';
   if (typeof process !== 'undefined' && process.env?.REACT_APP_API_BASE_URL) v = process.env.REACT_APP_API_BASE_URL;
-  if (!v && typeof window !== 'undefined' && window.__API_BASE__) v = window.__API_BASE__;
+  if (!v && typeof window !== 'undefined' && window.__API_BASE__) v = "https://electromart-server-4b6n.onrender.com";
   return normalizeBaseUrl(v);
 };
 
