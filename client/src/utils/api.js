@@ -8,8 +8,17 @@ const normalizeBaseUrl = (baseUrl = '') => {
 
 const readEnvBase = () => {
   let v = '';
-  if (typeof process !== 'undefined' && process.env?.REACT_APP_API_BASE_URL) v = process.env.REACT_APP_API_BASE_URL;
-  if (!v && typeof window !== 'undefined' && window.__API_BASE__) v = "https://electromart-server-4b6n.onrender.com";
+  // Prefer the env variable injected at build time (React exposes only REACT_APP_ prefixed vars).
+  if (typeof process !== 'undefined' && process.env?.REACT_APP_API_BASE_URL) {
+    v = process.env.REACT_APP_API_BASE_URL;
+  } else if (typeof window !== 'undefined' && window.__API_BASE__) {
+    // Next, use a runtime override if defined on the window (set in public/index.html).
+    v = window.__API_BASE__;
+  }
+  // If neither environment nor window override is provided, fall back to the deployed API origin.
+  if (!v) {
+    v = 'https://electromart-server-4b6n.onrender.com';
+  }
   return normalizeBaseUrl(v);
 };
 
