@@ -1,0 +1,25 @@
+*** Begin Patch
+*** Update File: client/src/utils/api.js
+@@
+-const readEnvBase = () => {
+-  let v = '';
+-  if (typeof process !== 'undefined' && process.env?.REACT_APP_API_BASE_URL) v = process.env.REACT_APP_API_BASE_URL;
+-  if (!v && typeof window !== 'undefined' && window.__API_BASE__) v = "https://electromart-server-4b6n.onrender.com";
+-  return normalizeBaseUrl(v);
+-};
++const readEnvBase = () => {
++  let v = '';
++  // Prefer the build-time environment variable (React exposes only REACT_APP_ prefixed variables).
++  if (typeof process !== 'undefined' && process.env?.REACT_APP_API_BASE_URL) {
++    v = process.env.REACT_APP_API_BASE_URL;
++  } else if (typeof window !== 'undefined' && window.__API_BASE__) {
++    // If a runtime override is set on the window, use it.
++    v = window.__API_BASE__;
++  }
++  // Fallback to the deployed API origin when no env or runtime override is defined.
++  if (!v) {
++    v = 'https://electromart-server-4b6n.onrender.com';
++  }
++  return normalizeBaseUrl(v);
++};
+*** End Patch
