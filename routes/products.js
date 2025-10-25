@@ -60,7 +60,7 @@ router.post('/', requireAuth, requireRole('admin'), validate(productCreateRules)
 // ✅ READ PRODUCTS (all / filtered)
 router.get('/', async (req, res) => {
   try {
-    const { category, subcategory, popular, seasonal, best, limit } = req.query;
+    const { category, subcategory, popular, seasonal, best, limit, search, sort, order, page } = req.query;
     const filter = {};
 
     if (category) filter.mainCategory = category;
@@ -68,12 +68,27 @@ router.get('/', async (req, res) => {
     if (popular === 'true') filter.isPopular = true;
     if (seasonal === 'true') filter.seasonalOffer = true;
     if (best === 'true') filter.bestChoice = true;
+    if (search) filter.name = { $regex: search, $options: 'i' };
+
+    // Sorting: default by createdAt desc
+    const sortField = sort && ['name', 'price', 'createdAt'].includes(sort) ? sort : 'createdAt';
+    const sortOrder = order === 'asc' ? 1 : -1;
+
+    // Pagination
+    const pageNum = Math.max(parseInt(page || '1'), 1);
+    const limitNum = Math.min(parseInt(limit || '20'), 100);
+    const skip = (pageNum - 1) * limitNum;
+
+    // Count total for pagination metadata
+    const total = await Product.countDocuments(filter);
+    const totalPages = Math.ceil(total / limitNum);
 
     const products = await Product.find(filter)
-      .sort({ createdAt: -1 })
-      .limit(Number(limit) || 20);
+      .sort({ [sortField]: sortOrder })
+      .skip(skip)
+      .limit(limitNum);
 
-    res.json(products);
+    res.json({ products, page: pageNum, totalPages });
   } catch (err) {
     console.error('Error fetching products:', err);
     res.status(500).json({ error: 'Failed to fetch products' });

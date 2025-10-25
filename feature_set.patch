@@ -1,0 +1,176 @@
+*** Begin Patch
+*** Add File: models/Wishlist.js
++import mongoose from 'mongoose';
++
++// Wishlist: each user has a list of product references they have marked as favourites.
++const wishlistSchema = new mongoose.Schema({
++  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
++  products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
++}, { timestamps: true });
++
++export default mongoose.model('Wishlist', wishlistSchema);
++
+*** End Patch
+*** Begin Patch
+*** Add File: models/Review.js
++import mongoose from 'mongoose';
++
++// Review: stores a rating and optional comment per user per product.
++const reviewSchema = new mongoose.Schema({
++  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
++  product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
++  rating: { type: Number, min: 1, max: 5, required: true },
++  comment: { type: String, trim: true },
++}, { timestamps: true });
++
++export default mongoose.model('Review', reviewSchema);
++
+*** End Patch
+*** Begin Patch
+*** Add File: routes/wishlist.js
++import express from 'express';
++import Wishlist from '../models/Wishlist.js';
++import Product from '../models/Product.js';
++import { requireAuth } from '../middleware/auth.js';
++
++const router = express.Router();
++
++// GET /api/wishlist - return the current user's wishlist products
++router.get('/', requireAuth, async (req, res) => {
++  try {
++    let list = await Wishlist.findOne({ user: req.user.id }).populate('products');
++    res.json((list && list.products) || []);
++  } catch (err) {
++    res.status(500).json({ error: 'Failed to fetch wishlist' });
++  }
++});
++
++// POST /api/wishlist/add/:id - add product to wishlist
++router.post('/add/:id', requireAuth, async (req, res) => {
++  const productId = req.params.id;
++  try {
++    let list = await Wishlist.findOne({ user: req.user.id });
++    if (!list) list = new Wishlist({ user: req.user.id, products: [] });
++    const exists = list.products.some(id => id.toString() === productId);
++    if (!exists) {
++      list.products.push(productId);
++      await list.save();
++    }
++    res.json({ message: 'Added to wishlist', wishlist: list.products });
++  } catch (err) {
++    res.status(500).json({ error: 'Failed to add to wishlist' });
++  }
++});
++
++// DELETE /api/wishlist/remove/:id - remove product from wishlist
++router.delete('/remove/:id', requireAuth, async (req, res) => {
++  const productId = req.params.id;
++  try {
++    const list = await Wishlist.findOne({ user: req.user.id });
++    if (!list) return res.status(404).json({ error: 'Wishlist not found' });
++    list.products = list.products.filter(id => id.toString() !== productId);
++    await list.save();
++    res.json({ message: 'Removed from wishlist', wishlist: list.products });
++  } catch (err) {
++    res.status(500).json({ error: 'Failed to remove from wishlist' });
++  }
++});
++
++export default router;
++
+*** End Patch
+*** Begin Patch
+*** Add File: routes/reviews.js
++import express from 'express';
++import Review from '../models/Review.js';
++import { requireAuth } from '../middleware/auth.js';
++
++const router = express.Router();
++
++// GET /api/reviews/:productId - fetch all reviews for a product
++router.get('/:productId', async (req, res) => {
++  try {
++    const { productId } = req.params;
++    const reviews = await Review.find({ product: productId }).populate('user', 'name');
++    res.json(reviews);
++  } catch (err) {
++    res.status(500).json({ error: 'Failed to fetch reviews' });
++  }
++});
++
++// POST /api/reviews/:productId - add a review to a product (requires auth)
++router.post('/:productId', requireAuth, async (req, res) => {
++  try {
++    const { productId } = req.params;
++    const { rating, comment } = req.body;
++    if (!rating) return res.status(400).json({ error: 'Rating is required' });
++    const review = new Review({ user: req.user.id, product: productId, rating, comment });
++    await review.save();
++    res.status(201).json({ message: 'Review added', review });
++  } catch (err) {
++    res.status(500).json({ error: 'Failed to add review' });
++  }
++});
++
++export default router;
++
+*** End Patch
+*** Begin Patch
+*** Update File: routes/products.js
+@@ router.get('/', async (req, res) => {
+-    const { category, subcategory, popular, seasonal, best, limit, search } = req.query;
++    const { category, subcategory, popular, seasonal, best, limit, search, sort, order, page } = req.query;
+@@ router.get('/', async (req, res) => {
+     const filter = {};
+@@
+     if (best === 'true') filter.bestChoice = true;
+     if (search) filter.name = { $regex: search, $options: 'i' };
++
++    // Sorting: default by createdAt desc
++    const sortField = sort && ['name','price','createdAt'].includes(sort) ? sort : 'createdAt';
++    const sortOrder = order === 'asc' ? 1 : -1;
++
++    // Pagination
++    const pageNum = Math.max(parseInt(page || '1'), 1);
++    const limitNum = Math.min(parseInt(limit || '20'), 100);
++    const skip = (pageNum - 1) * limitNum;
++
++    // Count total for pagination metadata
++    const total = await Product.countDocuments(filter);
++    const totalPages = Math.ceil(total / limitNum);
+@@
+-    const products = await Product.find(filter)
+-      .sort({ createdAt: -1 })
+-      .limit(Number(limit) || 20);
+-
+-    res.json(products);
++    const products = await Product.find(filter)
++      .sort({ [sortField]: sortOrder })
++      .skip(skip)
++      .limit(limitNum);
++
++    res.json({ products, page: pageNum, totalPages });
+*** End Patch
+*** Begin Patch
+*** Update File: app.js
+@@
+ import mpesaRoutes from './routes/mpesa.js';
+ import categoryRoutes from './routes/Category.js';
+ import productRoutes from './routes/products.js';
+ import ordersRoutes from './routes/orders.js';
+ import authRoutes from './routes/auth.js';
+ import heroRoutes from './routes/hero.js';
+ import showcaseRoutes from './routes/showcase.js';
++import wishlistRoutes from './routes/wishlist.js';
++import reviewRoutes from './routes/reviews.js';
+@@ export const createApp = () => {
+   app.use('/api/products', productRoutes);
+   app.use('/api/categories', categoryRoutes);
+   app.use('/api/orders', ordersRoutes);
+   app.use('/api/auth', authRoutes);
+   app.use('/api/payments', mpesaRoutes);
+   app.use('/api/hero', heroRoutes);
+   app.use('/api/showcase', showcaseRoutes);
++  app.use('/api/wishlist', wishlistRoutes);
++  app.use('/api/reviews', reviewRoutes);
+*** End Patch

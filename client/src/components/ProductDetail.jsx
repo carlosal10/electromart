@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useCart } from '../context/CartContext';
 import { apiUrl } from '../utils/api';
 import './ProductDetail.css';
+import { api } from '../utils/api';
 
 const fallbackImage = '/images/fallback.jpg';
 
@@ -19,7 +20,7 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const { addToCart } = useCart(); // ✅ access global cart context
+  const { addToCart } = useCart(); // âœ… access global cart context
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -85,7 +86,7 @@ const ProductDetail = () => {
 
   return (
     <div className="product-detail-container">
-      {/* 🔍 Image Zoom Overlay */}
+      {/* ðŸ” Image Zoom Overlay */}
       {zoomed && (
         <div className="zoom-overlay" onClick={() => setZoomed(false)}>
           <div className="zoom-content" onClick={(e) => e.stopPropagation()}>
@@ -107,7 +108,7 @@ const ProductDetail = () => {
               onError={(e) => (e.target.src = fallbackImage)}
               onClick={() => setZoomed(true)}
             />
-            <button className="wishlist-btn" title="Add to wishlist">
+            <button className="wishlist-btn" title="Add to wishlist" onClick={async () => { if (!localStorage.getItem("token")) { toast.info("Please login to save items to your wishlist."); return; } try { await api.post("/api/wishlist/add/" + id); toast.success("Added to wishlist!"); } catch (err) { console.error("Failed to add to wishlist", err); toast.error(err.message || "Failed to add to wishlist"); } }}>
               <FiHeart size={20} />
             </button>
           </div>
@@ -131,7 +132,7 @@ const ProductDetail = () => {
           <p className="price">Ksh {product.price.toLocaleString()}</p>
           {product.originalPrice && product.discount && (
             <p className="discount">
-              Was Ksh {product.originalPrice.toLocaleString()} – Save {product.discount}%
+              Was Ksh {product.originalPrice.toLocaleString()} â€“ Save {product.discount}%
             </p>
           )}
           <p className={`stock ${product.inStock ? 'in' : 'out'}`}>

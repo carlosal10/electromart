@@ -4,6 +4,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, unique: true, trim: true, required: true },
   phone: { type: String, unique: true, trim: true, required: true },
   password: { type: String, required: true },
+  // Optional address field for user profiles
+  address: { type: String, trim: true },
 }, { timestamps: true });
 
 export default mongoose.model("User", userSchema);

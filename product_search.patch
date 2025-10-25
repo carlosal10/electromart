@@ -1,0 +1,14 @@
+*** Begin Patch
+*** Update File: routes/products.js
+@@ router.get('/', async (req, res) => {
+-    const { category, subcategory, popular, seasonal, best, limit } = req.query;
++    const { category, subcategory, popular, seasonal, best, limit, search } = req.query;
+@@ router.get('/', async (req, res) => {
+     const filter = {};
+@@
+     if (subcategory) filter.subcategory = subcategory;
+     if (popular === 'true') filter.isPopular = true;
+     if (seasonal === 'true') filter.seasonalOffer = true;
+     if (best === 'true') filter.bestChoice = true;
++    if (search) filter.name = { $regex: search, $options: 'i' };
+*** End Patch

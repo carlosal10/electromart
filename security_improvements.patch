@@ -1,0 +1,25 @@
+*** Begin Patch
+*** Update File: app.js
+@@
+ import express from 'express';
+ import path from 'path';
+ import fs from 'fs';
+ import cors from 'cors';
++import helmet from 'helmet';
++import rateLimit from 'express-rate-limit';
+@@
+ export const createApp = () => {
+   const app = express();
++
++  // Apply common security headers (X-DNS-Prefetch-Control, Strict-Transport-Security, etc.)
++  app.use(helmet());
++
++  // Rate limit authentication endpoints to mitigate brute force attacks
++  const authLimiter = rateLimit({
++    windowMs: 15 * 60 * 1000, // 15 minutes
++    max: 20, // limit each IP to 20 requests per window
++    standardHeaders: true,
++    legacyHeaders: false,
++  });
++  app.use('/api/auth', authLimiter);
+*** End Patch

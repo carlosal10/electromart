@@ -1,0 +1,54 @@
+*** Begin Patch
+*** Update File: models/User.js
+@@
+   phone: { type: String, unique: true, trim: true, required: true },
+   password: { type: String, required: true },
++  // Optional address field for user profiles
++  address: { type: String, trim: true },
+*** End Patch
+*** Begin Patch
+*** Add File: routes/profile.js
++import express from 'express';
++import User from '../models/User.js';
++import { requireAuth } from '../middleware/auth.js';
++
++const router = express.Router();
++
++// GET /api/profile - get current user profile
++router.get('/', requireAuth, async (req, res) => {
++  try {
++    const user = await User.findById(req.user.id).select('-password');
++    res.json(user);
++  } catch (err) {
++    res.status(500).json({ error: 'Failed to fetch profile' });
++  }
++});
++
++// PUT /api/profile - update current user profile
++router.put('/', requireAuth, async (req, res) => {
++  try {
++    const { name, phone, address } = req.body || {};
++    const updates = {};
++    if (name) updates.name = name.trim();
++    if (phone) updates.phone = phone.trim();
++    if (address) updates.address = address.trim();
++    const user = await User.findByIdAndUpdate(req.user.id, updates, { new: true, select: '-password' });
++    res.json({ message: 'Profile updated', user });
++  } catch (err) {
++    res.status(500).json({ error: 'Failed to update profile' });
++  }
++});
++
++export default router;
+*** End Patch
+*** Begin Patch
+*** Update File: app.js
+@@
+ import reviewRoutes from './routes/reviews.js';
++import profileRoutes from './routes/profile.js';
+@@ export const createApp = () => {
+   app.use('/api/showcase', showcaseRoutes);
+   app.use('/api/wishlist', wishlistRoutes);
+   app.use('/api/reviews', reviewRoutes);
++  app.use('/api/profile', profileRoutes);
+*** End Patch

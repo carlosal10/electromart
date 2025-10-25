@@ -13,6 +13,8 @@ import CartPage from './pages/CartPage';
 import ProductDetail from './components/ProductDetail';
 import FloatingCart from './components/FloatingCart';
 import MiniCart from './components/MiniCart';
+import Wishlist from './pages/Wishlist';
+import Profile from './pages/Profile';
 
 import { CartProvider, useCart } from './context/CartContext';
 
@@ -40,6 +42,8 @@ const AppRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/profile" element={<Profile />} />
 
         <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>}>
           <Route index element={<Navigate to="overview" replace />} />
