@@ -82,7 +82,20 @@ export const createApp = () => {
 
   app.get('/test', (_req, res) => { res.send('Server is working'); });
 
-  // Note: static serving removed per request (no express.static usage)
+  // Serve frontend static assets when a build is present.
+  // This allows the same server to host the API and the built React app.
+  // We prefer a top-level `build/` directory, fallback to `client/build/`.
+  const possibleBuildDirs = [path.join(process.cwd(), 'build'), path.join(process.cwd(), 'client', 'build')];
+  const staticDir = possibleBuildDirs.find(d => fs.existsSync(d));
+  if (staticDir) {
+    app.use(express.static(staticDir));
+
+    // SPA fallback: serve index.html for non-API routes so client-side routing works
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api')) return next();
+      res.sendFile(path.join(staticDir, 'index.html'));
+    });
+  }
 
   return app;
 };
