@@ -6,14 +6,21 @@ import App from "../App";
 
 const mockResponse = (data) =>
   Promise.resolve({
+    ok: true,
+    status: 200,
+    headers: {
+      get: () => "application/json",
+    },
     json: () => Promise.resolve(data),
   });
 
 describe("App smoke test", () => {
   const originalFetch = global.fetch;
 
-  beforeAll(() => {
-    global.fetch = jest.fn((url) => {
+  beforeEach(() => {
+    global.fetch = jest.fn((input) => {
+      const url = String(input?.url || input || "");
+
       if (url.includes("/api/hero")) return mockResponse([]);
       if (url.includes("/api/categories")) return mockResponse([]);
       if (url.includes("/api/products")) return mockResponse([]);
@@ -22,7 +29,7 @@ describe("App smoke test", () => {
   });
 
   afterEach(() => {
-    global.fetch.mockClear();
+    global.fetch.mockReset();
   });
 
   afterAll(() => {
@@ -40,6 +47,6 @@ describe("App smoke test", () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByText(/Electromart/i)).toBeInTheDocument();
+    expect(await screen.findByText(/^Electromart$/i, { selector: ".logo" })).toBeInTheDocument();
   });
 });

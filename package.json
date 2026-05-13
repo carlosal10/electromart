@@ -8,9 +8,13 @@
                     "start":  "node server.js",
                     "dev":  "nodemon server.js",
                     "lint":  "eslint . --ext js,jsx --ignore-path .eslintignore",
-                    "test":  "vitest run",
+                    "test":  "npm run test:backend && npm run test:frontend",
+                    "test:backend":  "vitest run",
+                    "test:frontend":  "npm --prefix client run test:ci",
                     "test:watch":  "vitest",
                     "build":  "node ./scripts/client.cjs build",
+                    "verify":  "npm run lint && npm test && npm run build",
+                    "audit:client":  "npm audit --prefix client --audit-level=high",
                     "postinstall":  "node ./scripts/client.cjs install"
                 },
     "engines":  {

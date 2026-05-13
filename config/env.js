@@ -6,16 +6,17 @@ dotenv.config();
 export const env = cleanEnv(process.env, {
   NODE_ENV: str({ default: 'development' }),
   PORT: num({ default: 5000 }),
-  MONGO_URI: str(),
+  MONGO_URI: str({ devDefault: 'mongodb://127.0.0.1:27017/electromart_dev' }),
   CLIENT_BUILD_PATH: str({ default: 'client/build' }),
   CORS_ORIGINS: str({ 
-    default: JSON.stringify([
-      'https://electromart-server-4b6n.onrender.com',
-      'https://ecommerce-2sgt.onrender.com',
-      'https://electromart-2vwj.onrender.com'
+    devDefault: JSON.stringify([
+      'http://localhost:3000',
+      'http://localhost:5000',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:5000',
     ])
   }),
   LOG_LEVEL: str({ default: 'info' }),
-  JWT_SECRET: str({ default: '23f4g5h6j7k8l9m0n' }),
+  JWT_SECRET: str({ devDefault: 'dev-only-change-me-before-production' }),
 });
   

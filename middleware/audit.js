@@ -5,19 +5,22 @@ export const auditLog = () => async (req, res, next) => {
   const end = res.end;
   res.end = async function (...args) {
     try {
-      const duration = Date.now() - start;
+      const durationMs = Date.now() - start;
       const entry = new AuditLog({
         userId: req.auth?.id || null,
         role: req.auth?.role || null,
         method: req.method,
         path: req.originalUrl,
         statusCode: res.statusCode,
+        durationMs,
         ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
         userAgent: req.headers['user-agent'],
         payload: req.method !== 'GET' ? req.body : undefined,
       });
-      await entry.save().catch(() => {});
-    } catch {}
+      await entry.save().catch(() => undefined);
+    } catch (error) {
+      void error;
+    }
     return end.apply(this, args);
   };
   next();

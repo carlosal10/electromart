@@ -6,6 +6,7 @@ const auditLogSchema = new mongoose.Schema({
   method: { type: String },
   path: { type: String },
   statusCode: { type: Number },
+  durationMs: { type: Number },
   ip: { type: String },
   userAgent: { type: String },
   payload: { type: Object },
